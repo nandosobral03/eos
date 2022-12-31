@@ -2,13 +2,14 @@ import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
 
 
-const init = async () => {
+export const runMigrations = async () => {
     const db = await open({
         filename: './homescreen.db',
         driver: sqlite3.cached.Database
     })
     await db.exec(`CREATE TABLE IF NOT EXISTS bookmarks (
-        name TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
+        title TEXT NOT NULL,
         color TEXT NOT NULL
         )`)
     await db.exec(`CREATE TABLE IF NOT EXISTS links (
@@ -16,7 +17,7 @@ const init = async () => {
         name TEXT NOT NULL,
         url TEXT NOT NULL,
         bookmark_id TEXT NOT NULL,
-        FOREIGN KEY (bookmark_id) REFERENCES bookmarks (name)
+        FOREIGN KEY (bookmark_id) REFERENCES bookmarks (id)
         )`)
     await db.exec(`CREATE TABLE IF NOT EXISTS notes (
         id INTEGER PRIMARY KEY,
@@ -32,5 +33,13 @@ const init = async () => {
     return db
 }
 
+export const init = async () => {
+    const db = await open({
+        filename: './homescreen.db',
+        driver: sqlite3.cached.Database
+    })
+    return db
+}
 
-export default init
+
+export default {runMigrations, init}

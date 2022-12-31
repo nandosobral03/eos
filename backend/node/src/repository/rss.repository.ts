@@ -1,5 +1,5 @@
-import { RSS } from "../models/RSS.model"
-import init from "../db"
+import { RSS } from "../models/rss.model"
+import {init} from "../db"
 export const getRSS = async () => {
     const db = await init();
     const rss = await db.all("SELECT id, url, image FROM rss") as RSS[];

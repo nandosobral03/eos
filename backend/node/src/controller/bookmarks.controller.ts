@@ -1,40 +1,41 @@
 import { Request, Response } from "express";
-import repo from "../repository/rss.repository";
 import { handleHTTPError } from "../models/error.model";
-import { instanceOfRSS } from "../models/rss.model";
-export const getRSS = async (req: Request, res: Response) => {
+import { instanceOfBookmark } from "../models/bookmark.model";
+import repo from "../repository/bookmarks.repository";
+
+export const getBookmarks = async (req: Request, res: Response) => {
     try {
-        const rss = await repo.getRSS();
-        res.status(200).send(rss);
+        const bookmarks = await repo.getBookmarks();
+        res.status(200).send(bookmarks);
     } catch (error) {
         let err = handleHTTPError(error);
         res.status(err.status).send(err.message);
     }   
 }
 
-export const createRSS = async (req: Request, res: Response) => {
+export const createBookmark = async (req: Request, res: Response) => {
     try{
-        if(!instanceOfRSS(req.body)){
+        if(!instanceOfBookmark(req.body)){
             throw {
                 status: 400,
-                message: "Invalid RSS"
+                message: "Invalid bookmark"
             }
         }
-        const id = await repo.createRSS(req.body);
-        res.status(201).send({id, message: "RSS created"});
+        const id = await repo.createBookmark(req.body);
+        res.status(201).send({id, message: "Bookmark created"});
     } catch (error) {
         let err = handleHTTPError(error);
         res.status(err.status).send(err.message);
     }
 }
 
-export const deleteRSS = async (req: Request, res: Response) => {
+export const deleteBookmark = async (req: Request, res: Response) => {
     try{
         let id = parseInt(req.params.id);
-        await repo.deleteRSS(id);
+        await repo.deleteBookmark(id);
         res.status(204).send(
             {
-                message: "RSS deleted"
+                message: "Bookmark deleted"
             }
         );
     }
@@ -44,18 +45,18 @@ export const deleteRSS = async (req: Request, res: Response) => {
     }
 }
 
-export const updateRSS = async (req: Request, res: Response) => {
+export const updateBookmark = async (req: Request, res: Response) => {
     try{
         let id = parseInt(req.params.id);
-        if(!instanceOfRSS(req.body)){
+        if(!instanceOfBookmark(req.body)){
             throw {
                 status: 400,
-                message: "Invalid RSS"
+                message: "Invalid bookmark"
             }
         }
-        await repo.updateRSS(id, req.body);
+        await repo.updateBookmark(id, req.body);
         res.status(204).send({
-            message: "RSS updated"
+            message: "Bookmark updated"
         });
     }
     catch(error){
@@ -63,6 +64,3 @@ export const updateRSS = async (req: Request, res: Response) => {
         res.status(err.status).send(err.message);
     }
 }
-
-
-
