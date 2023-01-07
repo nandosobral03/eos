@@ -5,17 +5,24 @@
 	import RSSSettings from './rss/RSSSettings.svelte'
 	import { rss } from '$lib/stores/stores';
 	import { onMount } from 'svelte';
+	import { rssService } from '$lib/rss';
 	let urls: Array<RSSProvider> = [];
-	rss.subscribe((r) => {
-		urls = r;
-	});
 	let currentTab = 'rss';
 	let loading = true;
 	let rssfeed: Entry[] = [];
 	onMount(async () => {
+		rss.subscribe((r) => {
+			urls = r;
+			loadRSSFeed();
+		});
+		loadRSSFeed();
+	});
+
+
+	const loadRSSFeed = async () => {
 		const { read } = await import('@extractus/feed-extractor');
 		const allFeeds = (
-			await Promise.all(
+			await Promise.allSettled(
 				urls.map(async (r: RSS) => {
 					const feed = await read(r.url);
 					let entries =
@@ -34,6 +41,7 @@
 				})
 			)
 		)
+		.filter((p) => p.status === 'fulfilled').map((p: any) => p.value)
 			.flat()
 			.sort((a: Entry, b: Entry) => {
 				return new Date(b.published).getTime() - new Date(a.published).getTime();
@@ -54,9 +62,10 @@
 				image: ''
 			}
 		];
+		console.log(allFeeds)
 		loading = false;
 		rssfeed = allFeeds;
-	});
+	};
 
 	const getTimeAgo = (d: Date) => {
 		const now = new Date();
@@ -86,7 +95,7 @@
 	{#if currentTab === 'rss'}
 		{#if loading}
 			<div class="loading">
-				<span>Loading...</span>
+				<img src="./spinner.svg" alt="loading" />
 			</div>
 		{:else}
 			{#each rssfeed as feed}
@@ -119,9 +128,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 450px;
-		height: 750px;
+		width: clamp(300px, 35vw, 450px);
+		height: clamp(500px, 90vh, 800px);
 		gap: 10px;
+		padding: 10px 0px;
+		padding-left: 10px;
 		overflow-y: scroll;
 		font-family: 'Hanken Grotesk', sans-serif;
 	}
@@ -187,8 +198,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
-		height: 100%;
+		width: 90%;
+		height: 90%;
+        img{
+            width: 50%;
+            aspect-ratio: 1/1;
+            animation: spin 1s linear infinite;
+        }
 	}
 
 	.header {

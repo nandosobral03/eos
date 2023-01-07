@@ -3,6 +3,7 @@
 	import { bookmarks, notes, rss } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./RSSFeed.svelte";
+    import Toast from "./common/toast.svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
@@ -18,23 +19,24 @@
         <Multicomponent/>
         <img class="image" src="/55.jpg" alt="logo" />
     </div>
+    <Toast />
 </main>
 
 <style lang="scss">
     .main{
-        background-color: #2c2b2b;
-        height: 100%;
-        width: 100%;
+        height: clamp(600px, 100vh, 100vh);
+        width: clamp(1000px, 100vw, 100vw);
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         gap: 40px;
+        overflow: auto;
     }
 
     .right-component{
-        width: 550px;
-        height: 750px;
+        width: clamp(300px, 40vw, 450px);
+        height: clamp(500px, 90vh, 800px);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -43,7 +45,7 @@
 
     .image{
         width: 100%;
-        height: 400px;
+        height: 40%;
         object-fit: cover;
     }
 </style>

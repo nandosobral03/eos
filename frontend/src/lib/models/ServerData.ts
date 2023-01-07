@@ -1,5 +1,5 @@
 export interface RSSProvider {
-	id: number;
+	id?: number;
 	url: string;
 	image: string;
 }

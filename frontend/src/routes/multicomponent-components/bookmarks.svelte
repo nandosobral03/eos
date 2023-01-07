@@ -119,6 +119,8 @@
         flex-grow: 1;
         align-items: center;
         gap: 1rem;
+        flex-wrap: no-wrap;
+        overflow-x: scroll;
     }
     .name{
         width: 10%;
