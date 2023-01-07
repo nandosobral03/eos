@@ -1,3 +1,9 @@
 import initialize from "./app"
+import { runMigrations } from "./db";
 
-initialize();
+(
+    async () => {
+        await runMigrations();
+        await initialize();
+    }
+)();

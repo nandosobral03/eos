@@ -1,5 +1,8 @@
-import { RSS } from "../models/RSS.model"
-import init from "../db"
+import { RSS } from "../models/rss.model"
+import {init} from "../db"
+import fs from "fs";
+import path from "path";
+
 export const getRSS = async () => {
     const db = await init();
     const rss = await db.all("SELECT id, url, image FROM rss") as RSS[];
@@ -37,11 +40,28 @@ export const updateRSS = async (id:number, rss:RSS) => {
     }
 }
 
+export const updateRSSImage = async (id:number, image: { data: Buffer, name: string, size: number, mimetype: string, md5: string }) => {
+    let ext = path.extname(image.name);
+    let filename = `${id}${ext}`;
+    let filepath = path.join(__dirname, "..", "images", filename);
+    await fs.writeFileSync(filepath, image.data);
+    const db = await init();
+    try {
+        await db.run("UPDATE rss SET image = ? WHERE id = ?", `http://localhost:3000/static/${filename}`, id);
+    } catch (e) {
+        throw {
+            status: 400,
+            message: "Error updating RSS"
+        }
+    }
+}
 
+    
 
 export default {
     getRSS,
     createRSS,
     deleteRSS,
-    updateRSS
+    updateRSS,
+    updateRSSImage,
 }

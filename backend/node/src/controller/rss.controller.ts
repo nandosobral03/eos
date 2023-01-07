@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import repo from "../repository/rss.repository";
 import { handleHTTPError } from "../models/error.model";
-import { instanceOfRSS } from "../models/RSS.model";
+import { instanceOfRSS } from "../models/rss.model";
 export const getRSS = async (req: Request, res: Response) => {
     try {
         const rss = await repo.getRSS();
@@ -65,4 +65,35 @@ export const updateRSS = async (req: Request, res: Response) => {
 }
 
 
-
+//receive the file from the client via http request, save it in the ./images folder
+//validate file is an image
+export const updateRSSImage = async (req: Request, res: Response) => {
+    try{
+        let id = parseInt(req.params.id);
+        if(!req.files){
+            throw {
+                status: 400,
+                message: "Invalid file"
+            }
+        }
+        if (!req.files || Object.keys(req.files).length === 0 || !req.files.image) {
+            res.status(400).send({message:"No files were uploaded"});
+            return
+        }
+        let image = req.files.image as { data: Buffer, name: string, size: number, mimetype: string, md5: string };
+        if(!image.mimetype.startsWith("image/")){
+            throw {
+                status: 400,
+                message: "Invalid file"
+            }
+        }
+        await repo.updateRSSImage(id, image);
+        res.status(200).json({
+            message: "Image updated"
+        });
+    }
+    catch(error){
+        let err = handleHTTPError(error);
+        res.status(err.status).send(err.message);
+    }
+}
