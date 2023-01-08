@@ -5,14 +5,14 @@ export interface RSSProvider {
 }
 
 export interface Note {
-	id: number;
+	id?: number;
 	title: string;
 	content: string;
 	date: string;
 }
 
 export interface Bookmark {
-	name: string;
+	title: string;
 	color: string;
 	links: Array<{ name: string; url: string }>;
 }

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import repo from "../repository/rss.repository";
 import { handleHTTPError } from "../models/error.model";
 import { instanceOfRSS } from "../models/rss.model";
+
 export const getRSS = async (req: Request, res: Response) => {
     try {
         const rss = await repo.getRSS();
@@ -70,6 +71,7 @@ export const updateRSS = async (req: Request, res: Response) => {
 export const updateRSSImage = async (req: Request, res: Response) => {
     try{
         let id = parseInt(req.params.id);
+        console.log(req.files);
         if(!req.files){
             throw {
                 status: 400,

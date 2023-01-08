@@ -4,20 +4,21 @@
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
+	import BottomComponent from "./bottomComponent.svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
-        books: Array<Bookmark>       
+        bookmarks: Array<Bookmark>       
     };
     notes.set(data.notes);
-    bookmarks.set(data.books);
+    bookmarks.set(data.bookmarks);
     rss.set(data.rss);
 </script>
 <main class="main">
     <Rssfeed/>
     <div class="right-component">
         <Multicomponent/>
-        <img class="image" src="/55.jpg" alt="logo" />
+        <BottomComponent/>
     </div>
     <Toast />
 </main>
@@ -43,9 +44,4 @@
         gap: 20px;
     }
 
-    .image{
-        width: 100%;
-        height: 40%;
-        object-fit: cover;
-    }
 </style>

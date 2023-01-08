@@ -62,7 +62,6 @@
 				image: ''
 			}
 		];
-		console.log(allFeeds)
 		loading = false;
 		rssfeed = allFeeds;
 	};

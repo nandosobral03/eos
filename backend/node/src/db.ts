@@ -27,7 +27,7 @@ export const runMigrations = async () => {
         )`)
     await db.exec(`CREATE TABLE IF NOT EXISTS rss (
         id INTEGER PRIMARY KEY,
-        url TEXT NOT NULL,
+        url TEXT UNIQUE NOT NULL,
         image TEXT NOT NULL
         )`)
     return db

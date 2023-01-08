@@ -1,12 +1,16 @@
 <script lang="ts">
-	import Bookmarks from "./multicomponent-components/bookmarks.svelte";
+	import Bookmarks from "./bookmarks/bookmarks.svelte";
 	import Tracker from "./multicomponent-components/tracker.svelte";
     import Settings from "./multicomponent-components/settings.svelte";
-    import Notes from "./multicomponent-components/notes.svelte";
+    import Notes from "./notes/notes.svelte";
     let options = [
         {
             name: "bookmarks",
             component: Bookmarks
+        },
+        {
+            name: "notes",
+            component: Notes
         },
         {
             name: "tracker",
@@ -16,10 +20,7 @@
             name: "settings",
             component: Settings
         },
-        {
-            name: "notes",
-            component: Notes
-        }
+        
         ];
     let active = "bookmarks";
 </script>
@@ -55,6 +56,7 @@
         align-items: center;
         width: 100%;
         flex-grow: 1;
+        
     }
     .top-options{
         display: flex;
