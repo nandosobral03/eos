@@ -66,23 +66,26 @@
         gap: 20px;
         width: 100%;
         height: 12%;
-        border-bottom: 2px solid var(--gray-color);
+        border-bottom: 1px solid var(--border-color);
     }
 
     .option{
-        background-color: var(--gray-color);
+        background-color: var(--icon-background);
+        color: var(--icon-color) !important;
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
         cursor: pointer;
         transition: 0.1s;
         &.active{
-            background-color: var(--orange-color);
+            background-color: var(--icon-background-active);
+            color: var(--icon-color-active) !important;
             transition: 0ms;
         }
         &:hover{
-            background-color: var(--green-color);
-        transition: 0.1s;
+            background-color: var(--icon-background-hover);
+            color: var(--icon-color-hover) !important;
+            transition: 0.1s;
 
         }
         &:first-child{

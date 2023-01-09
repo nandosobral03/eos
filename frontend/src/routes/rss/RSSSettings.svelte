@@ -100,7 +100,7 @@
             &.add {
                 border-radius: 50%;
                 &:hover{
-                    color: var(--green-color);
+                    color: var(--success-color);
                 }
                 transition: 0.2s ease-in-out;
             }

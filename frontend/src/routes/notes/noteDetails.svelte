@@ -156,12 +156,12 @@
 		cursor: pointer;
 		&.delete {
 			&:hover {
-				color: var(--red-color);
+				color: var(--danger-color);
 			}
 		}
 		&.edit {
 			&:hover {
-				color: var(--green-color);
+				color: var( --success-color);
 			}
 		}
         &.back {
@@ -205,7 +205,7 @@
         font-size: 15px;
         font-family: var(--font-family);
         &.error{
-            border: 1px solid var(--red-color); 
+            border: 1px solid var(--danger-color); 
         }
     }
 
@@ -219,12 +219,11 @@
         width: clamp(200px, 28vw, 350px);
         max-width: clamp(200px, 28vw, 350px);
         color: var(--text-color);
-        font-family: var(--font-family);
         border: none;
         flex-grow: 1;
         background-color: var(--background-color);
         &.error{
-            border: 1px solid var(--red-color); 
+            border: 1px solid var(--danger-color); 
         }
     }
 </style>

@@ -21,7 +21,6 @@
         const url = URL.createObjectURL(backgroundBlob);
         document.getElementById('main')!.style.backgroundImage = `url(${url})`;
         refreshBackground.subscribe(n => {
-            console.log(n)
             const response = fetch('/settings/background');
             response.then(async (res) => {
                 backgroundBlob = await res.blob();
@@ -35,22 +34,34 @@
     })  
 
     const setUserColors = () => {
+        document.getElementById("main")?.classList.remove("displayNoneInside");
         const colorsString = localStorage.getItem("colors");
         if(!colorsString) return;
         const colors = JSON.parse(colorsString);
-        document.documentElement.style.setProperty('--text-color', colors.text);
         document.documentElement.style.setProperty('--background-color', colors.background);
-        document.documentElement.style.setProperty('--background-accent-color', colors.backgroundAccent);
-        document.documentElement.style.setProperty('--generic-0-color', colors.generic[0]);
-        document.documentElement.style.setProperty('--generic-1-color', colors.generic[1]);
-        document.documentElement.style.setProperty('--generic-2-color', colors.generic[2]);
-        document.documentElement.style.setProperty('--generic-3-color', colors.generic[3]);
-        document.documentElement.style.setProperty('--generic-4-color', colors.generic[4]);
-        document.documentElement.style.setProperty('--generic-5-color', colors.generic[5]);
+        document.documentElement.style.setProperty('--text-color', colors.text);
+        document.documentElement.style.setProperty('--text-color-accent', colors.textAccent);
+        document.documentElement.style.setProperty('--text-color-hover', colors.textHover);
+        document.documentElement.style.setProperty('--icon-color', colors.iconColor);
+        document.documentElement.style.setProperty('--icon-color-active', colors.iconColorActive);
+        document.documentElement.style.setProperty('--icon-color-hover', colors.iconColorHover);
+        document.documentElement.style.setProperty('--icon-background', colors.iconBackground);
+        document.documentElement.style.setProperty('--icon-background-active', colors.iconBackgroundActive);
+        document.documentElement.style.setProperty('--icon-background-hover', colors.iconBackgroundHover);
+        document.documentElement.style.setProperty('--accent-color', colors.accentColor);
+        document.documentElement.style.setProperty('--accent-color-hover', colors.accentColorHover);
+        document.documentElement.style.setProperty('--border-color', colors.borderColor);
+        document.documentElement.style.setProperty('--border-color-hover', colors.borderColorHover);
+        document.documentElement.style.setProperty('--button-color', colors.buttonColor);
+        document.documentElement.style.setProperty('--button-color-hover', colors.buttonColorHover);
+        document.documentElement.style.setProperty('--button-text-color', colors.buttonText);
+        document.documentElement.style.setProperty('--button-text-color-hover', colors.buttonTextHover);
+        document.documentElement.style.setProperty('--danger-color', colors.dangerColor);
+        document.documentElement.style.setProperty('--success-color', colors.successColor);
     }
 
 </script>
-<main class="main" id="main">
+<main class="main displayNoneInside" id="main">
     <Rssfeed/>
     <div class="right-component">
         <Multicomponent/>

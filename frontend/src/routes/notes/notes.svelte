@@ -13,7 +13,6 @@
 	let selectedNote: Note;
 	notes.subscribe((value) => {
 		noteList = value;
-		console.log(noteList);
 	});
 </script>
 
@@ -75,19 +74,29 @@
 		max-height: clamp(180px, 39vh, 290px);
         overflow: auto;
 		position: relative;
+		gap: 5px;
 	}
 	.note {
-		width: 100%;
+		width: calc(100% - 20px);
 		height: 40px;
 		line-height: 20px;
-		background-color: var(--background-color);
+		background-color: var(--accent-color);
 		padding: 10px;
 		display: flex;
 		justify-content: flex-start;
 		gap: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		border-radius: 5px;
 		cursor: pointer;
 		&:hover {
-			background-color: var(--gray-color);
+			background-color: var(--accent-color-hover);
+		}
+		&:first-child {
+			margin-top: 5px;
+		}
+		&:last-child {
+			margin-bottom: 5px;
 		}
 	}
 
@@ -106,7 +115,7 @@
 		position: absolute;
 		background-color: transparent;
 		border: none;
-		color: var(--green-color);
+		color: var(--icon-color);
 		bottom: 0;
 		right: 0;
 		margin: 20px;
@@ -115,8 +124,7 @@
 		align-items: center;
 		justify-content: center;
 		&:hover{
-			color: var(--text-hover);
-			
+			color: var(--success-color);
 		}
 	}
 

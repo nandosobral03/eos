@@ -121,7 +121,7 @@
         gap: 20px;
         padding: 10px;
         &.edit{
-            background-color: var(--gray-color);
+            background-color: var(--accent-color);
         }
     }
 
@@ -150,10 +150,10 @@
             color: var(--color-text);
             font-size: 0.8rem;
             &.delete :hover{
-                color: var(--red-color);
+                color: var(--danger-color);
             }
             &.edit :hover{
-                color: var(--green-color);
+                color: var(--success-color);
             }
 
             .material-symbols-outlined {

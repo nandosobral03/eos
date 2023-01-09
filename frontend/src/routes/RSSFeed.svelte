@@ -139,7 +139,7 @@
 	.entry {
 		width: calc(95% - 20px);
 		height: 200px;
-		background-color: var(--gray-color);
+		background-color: var(--accent-color);
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -148,9 +148,14 @@
 		padding: 10px;
 		transition: background-color 0.2s ease-in-out;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+		*{
+			transition: color 0ms;
+		}
 		cursor: pointer;
+
 		&:hover {
-			background-color: var(--cyan-color);
+			background-color: var(--accent-color-hover);
+			color: var(--text-color-hover);
 		}
 		&:first-child {
 			margin-top: 10px;
@@ -222,15 +227,19 @@
 		width: 20px;
 		height: 20px;
 		margin-right: 5px;
-		background-color: var(--gray-color);
+		background-color: var(--icon-background);
+		color: var(--icon-color) !important;
 		text-align: center;
 		border-radius: 25%;
 		cursor: pointer;
+		transition: color 0ms;
 		&.active {
-			background-color: var(--orange-color);
+			background-color: var(--icon-background-active);
+			color: var(--icon-color-active) !important;
 		}
 		&:hover {
-			background-color: var(--green-color);
+			background-color: var(--icon-background-hover);
+			color: var(--icon-color-hover) !important;
 		}
 		
 
@@ -240,6 +249,7 @@
 			margin: auto;
 			user-select: none; /* Non-prefixed version, currently
 							supported by Chrome and Opera */
+			
 		}
 	}
 </style>
