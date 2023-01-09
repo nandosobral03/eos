@@ -19,7 +19,6 @@
     const handleEdit = () => {
         editing = true;
         currentNote.update((n) => {
-            n.writing = true
             n.content = note.content
             return n
         })
@@ -122,6 +121,18 @@
             <textarea class="content-text-area" bind:value={note.content} on:keyup={handleContentChange}
                 placeholder="Write your note here..."
                 class:error={contentError}
+                on:focus={() => {
+                    currentNote.update((n) => {
+                        n.writing = true
+                        return n
+                    })
+                }}
+                on:blur={() => {
+                    currentNote.update((n) => {
+                        n.writing = false
+                        return n
+                    })
+                }}
             ></textarea>
         </div>
     {/if}
@@ -155,7 +166,7 @@
 		}
         &.back {
             &:hover {
-                color: white
+                color: var(--text-color);
             }
         }
 	}
@@ -212,8 +223,6 @@
         border: none;
         flex-grow: 1;
         background-color: var(--background-color);
-        &:focus{
-        }
         &.error{
             border: 1px solid var(--red-color); 
         }

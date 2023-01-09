@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Bookmarks from "./bookmarks/bookmarks.svelte";
-	import Tracker from "./multicomponent-components/tracker.svelte";
-    import Settings from "./multicomponent-components/settings.svelte";
+	import Tracker from "./tracker/tracker.svelte";
+    import Settings from "./settings/settings.svelte";
     import Notes from "./notes/notes.svelte";
     let options = [
         {
@@ -49,7 +49,7 @@
 <style lang="scss">
     .container{
         background-color: var(--background-color);
-        color: white;
+        color: var(--text-color);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -65,7 +65,7 @@
         align-items: center;
         gap: 20px;
         width: 100%;
-        height: 10%;
+        height: 12%;
         border-bottom: 2px solid var(--gray-color);
     }
 

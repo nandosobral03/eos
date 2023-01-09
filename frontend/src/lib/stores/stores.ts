@@ -10,3 +10,6 @@ export const currentNote: Writable<{ content: string, writing: boolean, }> = wri
         writing: false,
     }
 );
+
+export const refreshBackground: Writable<boolean> = writable(false);
+export const refreshBottom: Writable<boolean> = writable(false);

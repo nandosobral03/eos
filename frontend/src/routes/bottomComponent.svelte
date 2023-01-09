@@ -35,7 +35,6 @@
         width: 100%;
         height: calc(50% - 10px);
         object-fit: cover;
-        background-color: var(--background-color);
     }
    
 </style>

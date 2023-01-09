@@ -17,6 +17,7 @@
         width: 100%;
         height: calc(100%);
         color: var(--text-color);
+        background-color: var(--background-color);
         padding: 10px 30px;
         height: clamp(250px, 45vh, 325px);
         overflow: auto;

@@ -123,7 +123,7 @@
 <style lang="scss">
 	.container {
 		background-color: var(--background-color);
-		color: white;
+		color: var(--text-color);
 		display: flex;
 		flex-direction: column;
 		align-items: center;

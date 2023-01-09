@@ -25,7 +25,7 @@
                             on:mouseout={() => { 
                                 let node = document.getElementById(category.title + "-" +link.name)
                                 if(node != null){
-                                    node.style.color = "white"
+                                    node.style.color = "var(--text-color)"
                                 }
                             }}  
                             on:focus={() => {
@@ -37,7 +37,7 @@
                             on:blur={() => {
                                 let node = document.getElementById(category.title + "-" +link.name)
                                 if(node != null){
-                                    node.style.color = "white"
+                                    node.style.color = "var(--text-color)"
                                 }
                             }}>
                             {
@@ -72,7 +72,7 @@
         justify-content: flex-start;
     }
     .link{
-        color: white;
+        color: var(--text-color);
         text-decoration: none;
         font-size: 1rem;
      
