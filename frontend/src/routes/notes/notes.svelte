@@ -71,7 +71,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		max-height: clamp(180px, 39vh, 290px);
         overflow: auto;
 		position: relative;
 		gap: 5px;

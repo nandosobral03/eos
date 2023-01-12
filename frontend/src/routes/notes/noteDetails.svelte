@@ -146,7 +146,6 @@
         justify-content: space-between;
         align-items: center;
         gap: 10px;
-        background-color: var(--background-color);
     }
 
 	.material-symbols-outlined {
@@ -186,8 +185,8 @@
         flex-direction: column;
         justify-content: flex-start;
         gap: 10px;
-        background-color: var(--background-color);
-    }
+        background-color: transparent;
+        }
     
     .content{
         flex-grow: 1;
@@ -198,7 +197,7 @@
         width: 100%;
         height: 100%;
         padding: 1px;
-        background-color: var(--background-color);  
+        background-color: transparent;
         border: none;
         resize: none;
         color: var(--text-color);
@@ -221,7 +220,7 @@
         color: var(--text-color);
         border: none;
         flex-grow: 1;
-        background-color: var(--background-color);
+        background-color: transparent;
         &.error{
             border: 1px solid var(--danger-color); 
         }

@@ -55,6 +55,8 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
+        max-height: 45%;
+        min-height: 45%;
         flex-grow: 1;
         
     }
@@ -66,6 +68,8 @@
         gap: 20px;
         width: 100%;
         height: 12%;
+        max-height: 12%;
+        min-height: 12%;
         border-bottom: 1px solid var(--border-color);
     }
 
@@ -98,6 +102,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        overflow: auto;
         width: 100%;
         flex-grow: 1;
     }

@@ -46,7 +46,11 @@
   }
 
 .color_picker > div{
-  background-color: var(--background-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
+.color_picker > div:hover{
+  background-color: var(--accent-color-hover) !important;
 }
 
 .color_picker .color-picker{
@@ -62,7 +66,7 @@
   
   /* Track */
   ::-webkit-scrollbar-track {
-    background: var(--background-color);
+    background: transparent !important;
   }
   
   /* Handle */

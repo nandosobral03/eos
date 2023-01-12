@@ -151,7 +151,7 @@
         
         {/each}
     </div>
-    <div class="actions">
+    <div class="actions" style="justify-content: flex-end; gap: 5px;">
         <button class="action_button" on:click={updateColors}>Update</button>
         <button class="action_button" on:click={discardChanges}>Discard</button>
         <button class="action_button" on:click={restoreDefaults}>Restore Defaults</button>
@@ -170,7 +170,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		max-height: clamp(180px, 38vh, 290px);
         overflow: auto;
 		position: relative;
         gap: 10px;
@@ -220,6 +219,7 @@
                 color: var(--text-color);
              }
              .action_button{
+                margin: 5px 0px;
                 background-color: var(--button-color);
                 color: var(---button-text-color);
                 border: none;
