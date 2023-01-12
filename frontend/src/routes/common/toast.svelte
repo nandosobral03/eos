@@ -47,12 +47,14 @@
     .toast {
         flex: 0 0 auto;
         margin-bottom: 10px;
+        border-radius: 5px;
     }
 
     .content {
         padding: 10px;
         display: block;
         color: var(--text-color);
-        font-weight: 500;
+        font-weight: 200;
+        font-size: 1rem;
     }
 </style>

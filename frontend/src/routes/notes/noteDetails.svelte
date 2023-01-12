@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Note } from '$lib/models/ServerData';
 	import { noteService } from '$lib/notes';
+	import { notifications } from '$lib/notifications';
 	import { currentNote } from '$lib/stores/stores';
 	import { error } from '@sveltejs/kit';
     import DOMPurify from 'dompurify';
@@ -37,8 +38,6 @@
         if(titleError || contentError){
             return
         }
-
-
         editing = false;
         currentNote.update((n) => {
             n.writing = false
@@ -49,10 +48,22 @@
         if(create){
             create = false;
             console.log(create)
-            await noteService.createNote(note)
+            try{
+                await noteService.createNote(note)
+                notifications.success("Note created", 500);
+            }
+            catch{
+                notifications.danger("Failed to create note", 500);
+            }
             goBack();
         }else{
-            await noteService.updateNote(note)
+            try{
+                await noteService.updateNote(note)
+                notifications.success("Note updated", 500);
+            }
+            catch{
+                notifications.danger("Failed to update note", 500);
+            }
         }
     }
 
@@ -78,7 +89,13 @@
     }
 
     const handleDelete = async () => {
-        await noteService.deleteNote(note.id!)
+        try{
+            await noteService.deleteNote(note.id!)
+            notifications.success("Note deleted", 500);
+        }
+        catch{
+            notifications.danger("Failed to delete note", 500);
+        }
         goBack();
     }
 

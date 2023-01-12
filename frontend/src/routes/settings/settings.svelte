@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { refreshBackground, refreshBottom } from "$lib/stores/stores";
+	import { bookmarks, refreshBackground, refreshBottom } from "$lib/stores/stores";
 	import axios from "axios";
 	import { onMount } from "svelte";
     import { Color, ColorInput } from 'color-picker-svelte'
-	
+	import type { Bookmark } from "$lib/models/ServerData";
+    import BookmarkEdit from "./BookmarkEdit.svelte";
+	import { bookmarkService } from "$lib/bookmarks";
+	import { notifications } from "$lib/notifications";
     let backgroundImage: FileList; 
     let bottomImage: FileList;
-   
-
     let defaultColors = {
         background: "#2f343f",
         accentColor: "#4b5262",
@@ -30,9 +31,19 @@
         dangerColor: "#bf616a",
         successColor: "#a3be8c",
     }
+    let editing :number|undefined= undefined;
     //object with all the same properties but every color is created with the new Color() consturctor
     let colors = defaultColors
     $: colorsConstructor = Object.entries(defaultColors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
+    let bms : Bookmark[] = [];
+
+    bookmarks.subscribe(
+        (value) => {
+            bms = value;
+        }
+    )
+    
+    
     onMount(() => {
         let col = localStorage.getItem("colors")
         if(col){
@@ -115,30 +126,61 @@
         return str.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
     }
 
+    const deleteBookmark = async (id: number | undefined) => {
+        try{
+            if(id) bookmarkService.deleteBookmark(id)
+            else bookmarks.set(bms.filter(b => b.id != id))
+            notifications.success("Bookmark deleted",500);
+        }   
+        catch(e){
+            notifications.danger("Error deleting bookmark",500);
+        }
+    }
+
 </script>
 
 
 <div class="wrapper">
     
-    <div class="settings">
-        <span class="title">Bookmarks</span>
-    </div>
-    <div class="settings">
-        <span class="title">Image</span>
-        <div class="actions">
-            <span class="action_title">Image</span>
-            <button class="action_button" on:click={() => {document.getElementById('bottom_image')?.click()}}>Upload</button>
-        </div>
-    </div>
-    <div class="settings">
-        <span class="title">Background</span>
-        <div class="actions">
-            <span class="action_title">Background Image</span>
-            <button class="action_button" on:click={() => {document.getElementById('background_image')?.click()}}>Upload</button>
-        </div>
-    </div>
 <div class="settings">
-
+    <span class="title">Bookmarks</span>
+    {#each bms as bookmark}
+            <div class="actions">
+                <span class="action_title" >{bookmark.title}</span>
+                {#if editing != bookmark.id}
+                    <div class="bookmark_actions" >
+                        <button class="edit" on:click={() => {editing = editing == bookmark.id ? undefined : bookmark.id}} >  <span class="material-symbols-outlined">edit</span> </button>
+                        <button class="delete" on:click={() => {deleteBookmark(bookmark.id)}} >  <span class="material-symbols-outlined">delete</span> </button>
+                    </div>
+                {/if}
+            </div>
+        
+        <div class="{editing == bookmark.id ? "bookmark_edit" : "bookmark_edit hidden"}">
+            <BookmarkEdit bookmark={bookmark} on:save={() => {editing = undefined}} on:discard={() => {editing = undefined}} />
+        </div>
+    {/each}
+    <button class="action_button" on:click={() => {editing = -1}} style="align-self:flex-end; margin-right:10px" >Add</button>
+    {#if editing == -1}
+        <div class="bookmark_edit">
+            <BookmarkEdit on:save={() => {editing = undefined}} on:discard={() => {editing = undefined}}  bookmark={{title: "", links:[], color:"#000000"}} />
+        </div>
+    {/if}
+</div>
+<div class="settings">
+    <span class="title">Image</span>
+    <div class="actions">
+        <span class="action_title">Image</span>
+        <button class="action_button" on:click={() => {document.getElementById('bottom_image')?.click()}}>Upload</button>
+    </div>
+</div>
+<div class="settings">
+    <span class="title">Background</span>
+    <div class="actions">
+        <span class="action_title">Background Image</span>
+        <button class="action_button" on:click={() => {document.getElementById('background_image')?.click()}}>Upload</button>
+    </div>
+</div>
+<div class="settings">
     <span class="title">Colors</span>
     <div class="actions_list">
         {#each Object.keys(colors) as color}
@@ -218,7 +260,14 @@
                 font-weight: 600;
                 color: var(--text-color);
              }
-             .action_button{
+             
+        }
+
+        .color_picker{
+            width: 45%;
+        }
+    }
+    .action_button{
                 margin: 5px 0px;
                 background-color: var(--button-color);
                 color: var(---button-text-color);
@@ -234,12 +283,50 @@
                     color: var(---button-text-color-hover);
                 }
              }
-        }
 
-        .color_picker{
-            width: 45%;
+    .bookmark_actions{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        button{
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-text);
+            font-size: 0.8rem;
+            &.delete :hover{
+                color: var(--danger-color);
+            }
+            &.edit :hover{
+                color: var(--success-color);
+            }
+
+            .material-symbols-outlined {
+			font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 48;
+			font-size: 16px;
+			margin: auto;
+			user-select: none; /* Non-prefixed version, currently
+							supported by Chrome and Opera */
+		}
         }
     }
+    .bookmark_edit{
+        transition: height 0.5s ease-in-out;
+        max-height:15em;
+        height: clamp(0px, 100%, 15em);
+        width: 100%;
+         overflow: auto;
+    }
 
+    .hidden{
+        height: 0px;
+        max-height:0em;
+        padding: 0px;
+        margin: 0px;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+    }
 
 </style>

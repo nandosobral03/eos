@@ -12,6 +12,7 @@ export interface Note {
 }
 
 export interface Bookmark {
+	id?: number;
 	title: string;
 	color: string;
 	links: Array<{ name: string; url: string }>;

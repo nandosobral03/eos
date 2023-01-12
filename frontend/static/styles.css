@@ -49,9 +49,7 @@
   background-color: var(--accent-color) !important;
 }
 
-.color_picker > div:hover{
-  background-color: var(--accent-color-hover) !important;
-}
+
 
 .color_picker .color-picker{
   height: unset !important;
