@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { bookmarks, refreshBackground, refreshBottom } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, refreshBackground, refreshBottom } from "$lib/stores/stores";
 	import axios from "axios";
 	import { onMount } from "svelte";
     import { Color, ColorInput } from 'color-picker-svelte'
@@ -42,7 +42,11 @@
             bms = value;
         }
     )
-    
+        
+    let bottomContainerType : string;
+    bottomComponent.subscribe((n) => {
+        if(bottomContainerType != n) bottomContainerType = n;
+    })
     
     onMount(() => {
         let col = localStorage.getItem("colors")
@@ -167,10 +171,19 @@
     {/if}
 </div>
 <div class="settings">
-    <span class="title">Image</span>
+    <span class="title">Bottom Container</span>
     <div class="actions">
+        
+
         <span class="action_title">Image</span>
         <button class="action_button" on:click={() => {document.getElementById('bottom_image')?.click()}}>Upload</button>
+    </div>
+    <div class="actions">
+        <span class="action_title">Type</span>
+        <select class="action_button" bind:value={bottomContainerType} on:change={() => {bottomComponent.set(bottomContainerType)}}>
+            <option value="potd">NASA POTD</option>
+            <option value="single-image">Image</option>
+        </select>
     </div>
 </div>
 <div class="settings">
@@ -270,7 +283,7 @@
     .action_button{
                 margin: 5px 0px;
                 background-color: var(--button-color);
-                color: var(---button-text-color);
+                color: var(--button-text-color);
                 border: none;
                 border-radius: 5px;
                 padding: 5px;
@@ -280,7 +293,7 @@
                 transition: all 0.2s ease-in-out;
                 &:hover{
                     background-color: var(--button-color-hover);
-                    color: var(---button-text-color-hover);
+                    color: var(--button-text-color-hover);
                 }
              }
 

@@ -13,3 +13,26 @@ export const currentNote: Writable<{ content: string, writing: boolean, }> = wri
 
 export const refreshBackground: Writable<boolean> = writable(false);
 export const refreshBottom: Writable<boolean> = writable(false);
+
+function createBottomComponentStore() {
+    const {set, subscribe } = writable('single-image');
+    let state : string
+      subscribe((v)=>state=v)
+    function customSet(value: string) {
+        set(value)
+        const settings = localStorage.getItem('settings')
+        if(settings){
+            const parsed = JSON.parse(settings)
+            parsed.bottomComponent = value
+            localStorage.setItem('settings', JSON.stringify(parsed))
+        }else{
+            localStorage.setItem('settings', JSON.stringify({bottomComponent: value}))
+        }
+}
+    return {
+      subscribe,
+      set:customSet,
+    };
+  }
+
+export const bottomComponent = createBottomComponentStore();

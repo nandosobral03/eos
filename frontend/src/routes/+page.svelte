@@ -1,19 +1,25 @@
 <script lang="ts">
 	import type { Bookmark, Note, RSSProvider } from "$lib/models/ServerData";
-	import { bookmarks, notes, refreshBackground, rss } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, notes, refreshBackground, rss } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
-    import Rssfeed from "./RSSFeed.svelte";
+    import Rssfeed from "./rss/RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
-	import BottomComponent from "./bottomComponent.svelte";
+	import BottomComponent from "./bottom_container/bottomComponent.svelte";
 	import { onMount } from "svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
-        bookmarks: Array<Bookmark>       
+        bookmarks: Array<Bookmark> 
+        access_token?: string
+        refresh_token?: string   
+        expires_in?: number   
     };
     notes.set(data.notes);
     bookmarks.set(data.bookmarks);
     rss.set(data.rss);
+    
+    
+
     let backgroundBlob: Blob;
     onMount(async () => {
         const response = await fetch('/settings/background');
@@ -28,10 +34,27 @@
                 document.getElementById('main')!.style.backgroundImage = `url(${url})`;
             })
         })
+        setUserSettings();
         setUserColors();
-
-
+        if(data.access_token) localStorage.setItem("access_token", data.access_token);
+        if(data.refresh_token) localStorage.setItem("refresh_token", data.refresh_token);
+        if(data.expires_in) {
+            localStorage.setItem("expires_at", (new Date().getTime() + data.expires_in * 1000).toString());
+        }
+        window.history.pushState({}, document.title, window.location.pathname);
     })  
+
+    const setUserSettings = () =>{
+        setUserColors();
+        let settings = localStorage.getItem("settings");
+        if(!settings) return;
+        let parsed = JSON.parse(settings);
+        console.log(parsed)
+        if(parsed?.bottomComponent){
+            bottomComponent.set(parsed.bottomComponent);
+            
+        }
+    }
 
     const setUserColors = () => {
         document.getElementById("main")?.classList.remove("displayNoneInside");

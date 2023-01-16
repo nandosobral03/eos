@@ -8,7 +8,7 @@ export async function POST({ request }:any) {
         return new Response("No file uploaded",{ status: 400 })
     }
     
-    const image = data.get("image")! as unknown as Blob;
+    const image = data.get("image") as unknown as Blob;
     if (!image) {
         return new Response("No file uploaded",{ status: 400 })
     }
@@ -19,7 +19,7 @@ export async function POST({ request }:any) {
     //First remove image.* from static/images
     const imageDir = path.join(process.cwd(), "static", "images");
     const files = fs.readdirSync(imageDir);
-    let toRemove = files.filter(file => file.startsWith("image."));
+    const toRemove = files.filter(file => file.startsWith("image."));
     toRemove.forEach(file => {
         fs.unlinkSync(path.join(imageDir, file));
     });
@@ -36,7 +36,7 @@ export async function POST({ request }:any) {
 export async function GET() {
     const imageDir = path.join(process.cwd(), "static", "images");
     const files = fs.readdirSync(imageDir);
-    let backgroundFile = files.filter(file => file.startsWith("image."));
+    const backgroundFile = files.filter(file => file.startsWith("image."));
     if(backgroundFile.length === 0){
         return new Response("No background image found",{ status: 404 })
     }

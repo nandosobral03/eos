@@ -2,7 +2,7 @@
 	import type { Entry, RSS } from '$lib/models/RSS';
 	import type { RSSProvider } from '$lib/models/ServerData';
 	import customMappers from '$lib/RSSCustomMappers';
-	import RSSSettings from './rss/RSSSettings.svelte'
+	import RSSSettings from './RSSSettings.svelte'
 	import { rss } from '$lib/stores/stores';
 	import { onMount } from 'svelte';
 	import { rssService } from '$lib/rss';

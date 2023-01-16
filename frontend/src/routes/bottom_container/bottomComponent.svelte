@@ -1,8 +1,15 @@
 <script lang="ts">
-    import MdViewer from "./notes/MDViewer.svelte";
-    import SingleImageComponent from "./images/singleImageComponent.svelte";
-	import { currentNote } from "$lib/stores/stores";
-    let active = "single-image";
+    import MdViewer from "../notes/MDViewer.svelte";
+    import SingleImageComponent from "./singleImageComponent.svelte";
+	import { bottomComponent, currentNote } from "$lib/stores/stores";
+	import NasaPotd from "./nasaPOTD.svelte";
+    let active = "potd";
+    let activeCopy = active;
+    bottomComponent.subscribe((n) => {
+        activeCopy = n;
+        active = n;
+    })
+
     let options = [
         {
             name: "single-image",
@@ -12,13 +19,17 @@
             name: "md-viewer",
             component: MdViewer
         },
+        {
+            name: "potd",
+            component: NasaPotd
+        }
     ]
 
     currentNote.subscribe((n) => {
         if(n.writing){
             active = "md-viewer";
         }else{
-            active = "single-image";
+            active = activeCopy;
         }
     })
 </script>

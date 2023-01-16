@@ -3,6 +3,7 @@
 	import Tracker from "./tracker/tracker.svelte";
     import Settings from "./settings/settings.svelte";
     import Notes from "./notes/notes.svelte";
+    import Spotify from "./spotify-stats/spotify.svelte";
     let options = [
         {
             name: "bookmarks",
@@ -17,10 +18,13 @@
             component: Tracker
         },
         {
+            name: "spotify",
+            component: Spotify
+        },
+        {
             name: "settings",
             component: Settings
         },
-        
         ];
     let active = "bookmarks";
 </script>
