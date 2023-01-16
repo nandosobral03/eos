@@ -3,6 +3,7 @@ import rssRoutes from './routes/rss.routes';
 import bookmarkRoutes from './routes/bookmarks.routes';
 import noteRoutes from './routes/notes.routes';
 import fileUpload from 'express-fileupload';
+import spotifyRoutes from './routes/spotify.routes';
 import cors from 'cors';
 
 
@@ -20,9 +21,10 @@ const initialize = async () => {
     app.use("/rss", rssRoutes);
     app.use("/bookmarks", bookmarkRoutes);
     app.use("/notes", noteRoutes);
-
-    app.listen(3000, () => {
+    app.use("/spotify", spotifyRoutes);
+    app.listen(process.env.port, () => {
         console.log('Example app listening on port 3000!');
+        
     });
 
 };

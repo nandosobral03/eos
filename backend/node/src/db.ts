@@ -30,6 +30,7 @@ export const runMigrations = async () => {
         url TEXT UNIQUE NOT NULL,
         image TEXT NOT NULL
         )`)
+
     return db
 }
 
