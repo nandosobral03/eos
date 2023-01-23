@@ -30,7 +30,16 @@ export const runMigrations = async () => {
         url TEXT UNIQUE NOT NULL,
         image TEXT NOT NULL
         )`)
-
+    await db.exec(`CREATE TABLE IF NOT EXISTS tracked (
+        id INTEGER NOT NULL,
+        title TEXT PRIMARY KEY NOT NULL,
+        displayTitle TEXT NOT NULL,
+        currentEpisode INTEGER NOT NULL,
+        totalEpisodes INTEGER,
+        url TEXT,
+        image TEXT NOT NULL,
+        status TEXT NOT NULL
+    )`)
     return db
 }
 

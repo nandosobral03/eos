@@ -15,6 +15,12 @@ router.get("/login", function (req, res) {
     "user-read-recently-played",
     "user-library-read",
     "user-read-currently-playing",
+    "user-read-playback-state",
+    "user-modify-playback-state",
+    "playlist-read-private",
+    "playlist-read-collaborative",
+    "playlist-modify-public",
+    "playlist-modify-private",
   ].join(" ");
   let client_id = process.env.SPOTIFY_CLIENT_ID;
   let redirect_uri = process.env.URL + "/spotify/callback";
@@ -215,5 +221,134 @@ router.get("/top-tracks", async (req: Request, res: Response) => {
     return;
   }
 });
+
+
+
+router.get("/currently-playing", async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization;
+  if (!access_token || access_token === "") {
+    res.status(403).send("No access token provided");
+    return;
+  }
+  try {
+    const currentlyPlaying = await axios.get(`${spotifyURl}/me/player`, {
+      headers: {
+        Authorization: `${access_token}`,
+        ContentType: "application/json",
+      },
+    });
+    if(res.statusCode === 204){
+      res.send({
+        is_playing: false,
+      });
+      return;
+    }else{
+      res.send({...currentlyPlaying.data,  is_playing: true});
+
+    }
+    return;
+  } catch (err) {
+    res.status(500).send("Error getting currently playing");
+    return;
+  }
+});
+
+router.put("/start-playback", async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization  || req.query.access_token;
+
+  if (!access_token || access_token === "") {
+    res.status(403).send("No access token provided");
+    return;
+  }
+  try {
+    const startPlayback = await axios.put(`${spotifyURl}/me/player/play`,{}, {
+      headers: {
+        Authorization: `${access_token}`,
+        ContentType: "application/json",
+      },
+    });
+    res.send(startPlayback.data);
+    return;
+  } catch (err) {
+    res.status(500).send("Error starting playback");
+    return;
+  }
+});
+
+router.put("/pause-playback", async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization;
+  if (!access_token || access_token === "") {
+    res.status(403).send("No access token provided");
+    return;
+  }
+  try { 
+    const pausePlayback = await axios.put(`${spotifyURl}/me/player/pause`,{}, {
+      headers: {
+        Authorization: `${access_token}`,
+        ContentType: "application/json",
+      },
+    });
+   res.send({
+      message: "Playback paused",
+   })
+    return;
+  } catch (err) {
+    res.status(500).send("Error pausing playback");
+    return;
+  }
+});
+
+router.put("/next-track", async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization;
+  if (!access_token || access_token === "") {
+    res.status(403).send("No access token provided");
+    return;
+  }
+  try {
+    const nextTrack = await axios.post(`${spotifyURl}/me/player/next`,{}, {
+      headers: {
+        Authorization: `${access_token}`,
+        ContentType: "application/json",
+      },
+    });
+    res.send({
+      message: "Skipped to next track",
+    });
+    return;
+  } catch (err) {
+    res.status(500).send("Error skipping to next track");
+    return;
+  }
+});
+
+router.put("/previous-track", async (req: Request, res: Response) => {
+  const access_token = req.headers.authorization;
+  if (!access_token || access_token === "") {
+    res.status(403).send("No access token provided");
+    return;
+  }
+  try {
+    const previousTrack = await axios.post(`${spotifyURl}/me/player/previous`,{}, {
+      headers: {
+        Authorization: `${access_token}`,
+        ContentType: "application/json",
+      },
+    });
+    res.send({
+      message: "Skipped to previous track",
+    });
+    return;
+  } catch (err) {
+    res.status(500).send("Error skipping to previous track");
+    return;
+  }
+});
+
+
+
+
+
+
+
 
 export default router;

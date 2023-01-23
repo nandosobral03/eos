@@ -4,6 +4,7 @@ import bookmarkRoutes from './routes/bookmarks.routes';
 import noteRoutes from './routes/notes.routes';
 import fileUpload from 'express-fileupload';
 import spotifyRoutes from './routes/spotify.routes';
+import trackerRoutes from './routes/tracker.routes';
 import cors from 'cors';
 
 
@@ -22,6 +23,7 @@ const initialize = async () => {
     app.use("/bookmarks", bookmarkRoutes);
     app.use("/notes", noteRoutes);
     app.use("/spotify", spotifyRoutes);
+    app.use("/tracker", trackerRoutes);
     app.listen(process.env.port, () => {
         console.log('Example app listening on port 3000!');
         
