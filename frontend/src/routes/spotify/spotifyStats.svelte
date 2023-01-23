@@ -2,7 +2,6 @@
 	import type { Artist, Track } from "$lib/models/Spotify";
 	import { spotifyService } from "$lib/spotify";
 	import { onMount } from "svelte";
-	import { each } from "svelte/internal";
     let access_token = localStorage.getItem("access_token");
     let refresh_token = localStorage.getItem("refresh_token");
     let expires_at = localStorage.getItem("expires_at");
@@ -17,8 +16,8 @@
         if(access_token && refresh_token && expiryDate < now){
           await spotifyService.refreshAccessToken(refresh_token)
         }
-        artists = await spotifyService.getUserTopArtists("short_term");
-        songs = await spotifyService.getUserTopTracks("short_term");
+        artists = await spotifyService.getUserTopArtists();
+        songs = await spotifyService.getUserTopTracks();
         console.log(artists, songs)
     })  
 

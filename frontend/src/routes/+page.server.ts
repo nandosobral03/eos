@@ -6,7 +6,8 @@ export const load = async (data:{url:any}) => {
         const results = await Promise.all([
             getRssLinks(),
             getBookmarks(),
-            getNotes()
+            getNotes(),
+            getTracked()
         ])
         const access_token = data.url.searchParams.get("access_token")
         const refresh_token = data.url.searchParams.get("refresh_token")
@@ -19,6 +20,7 @@ export const load = async (data:{url:any}) => {
             rss: results[0],
             bookmarks: results[1],
             notes: results[2],
+            tracked: results[3],
             access_token,
             refresh_token,
             expires_in
@@ -28,7 +30,8 @@ export const load = async (data:{url:any}) => {
        return {
             rss: [],
             bookmarks: [],
-            notes: []
+            notes: [],
+            tracked: [],
        }
     }
     
@@ -47,5 +50,10 @@ const getBookmarks = async () => {
 
 const getNotes = async () => {
     const response = await axios.get(`${environment.api}/notes`);
+    return response.data;
+}
+
+const getTracked = async () => {
+    const response = await axios.get(`${environment.api}/tracker`);
     return response.data;
 }

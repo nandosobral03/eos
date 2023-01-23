@@ -1,15 +1,19 @@
 <script lang="ts">
 	import type { Bookmark, Note, RSSProvider } from "$lib/models/ServerData";
-	import { bookmarks, bottomComponent, notes, refreshBackground, rss } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, notes, refreshBackground, rss, tracked } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./rss/RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
 	import BottomComponent from "./bottom_container/bottomComponent.svelte";
 	import { onMount } from "svelte";
+	import CurrentlyPlaying from "./spotify/currentlyPlaying.svelte";
+	import { spotifyService } from "$lib/spotify";
+	import type { Tracked } from "$lib/models/Tracker";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
-        bookmarks: Array<Bookmark> 
+        bookmarks: Array<Bookmark>
+        tracked: Array<Tracked> 
         access_token?: string
         refresh_token?: string   
         expires_in?: number   
@@ -17,11 +21,21 @@
     notes.set(data.notes);
     bookmarks.set(data.bookmarks);
     rss.set(data.rss);
-    
+    tracked.set(data.tracked);
     
 
     let backgroundBlob: Blob;
     onMount(async () => {
+        const access_token = localStorage.getItem("access_token");
+        const refresh_token = localStorage.getItem("refresh_token");
+        const expires_at = localStorage.getItem("expires_at");
+        const expiryDate = new Date(parseInt(expires_at!));
+        let now = new Date();
+        
+        if(access_token && refresh_token && expiryDate < now){
+          await spotifyService.refreshAccessToken(refresh_token)
+        }
+
         const response = await fetch('/settings/background');
         backgroundBlob = await response.blob();
         const url = URL.createObjectURL(backgroundBlob);
@@ -91,6 +105,7 @@
         <BottomComponent/>
     </div>
     <Toast />
+    <CurrentlyPlaying/>
 </main>
 
 <style lang="scss">

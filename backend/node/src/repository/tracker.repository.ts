@@ -17,25 +17,15 @@ const addTracked = async (tracked: Tracked) => {
     const db = await init();
     console.log(tracked);
     console.log( tracked.id, tracked.title , tracked.displayTitle, tracked.currentEpisode, tracked.totalEpisodes, tracked.url, tracked.image, tracked.status)
-    if(tracked.id){
-        const usingId = await db.run(
-            `
-            INSERT INTO tracked (id, title, displayTitle, currentEpisode, totalEpisodes, url, image, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?,?)
-            `,
-            tracked.id, tracked.title, tracked.displayTitle, tracked.currentEpisode, tracked.totalEpisodes, tracked.url, tracked.image, tracked.status
-        );
-        
-        return usingId;
-    }
-    const newTracked = await db.run(
+    const usingId = await db.run(
         `
-        INSERT INTO tracked (title, displayTitle, currentEpisode, totalEpisodes, url, image, status)
-        VALUES (?, ?, ?, ?, ?, ?,?)
+        INSERT INTO tracked (id, title, displayTitle, currentEpisode, totalEpisodes, url, image, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?,?)
         `,
-        tracked.title, tracked.displayTitle, tracked.currentEpisode, tracked.totalEpisodes, tracked.url, tracked.image, tracked.status
+        tracked.id, tracked.title, tracked.displayTitle, tracked.currentEpisode, tracked.totalEpisodes, tracked.url, tracked.image, tracked.status
     );
-    return newTracked;
+    
+    return usingId;
 }
 
 
@@ -88,14 +78,14 @@ const getTrackedById = async (id: number) => {
 
 
 
-const deleteTracked = async (id: number) => {
+const deleteTracked = async (title: string) => {
     const db = await init();
     const deletedTracked = await db.run(
         `
         DELETE FROM tracked
-        WHERE id = ?
+        WHERE title = ?
         `,
-        id
+        title
     );
     return deletedTracked;
 }

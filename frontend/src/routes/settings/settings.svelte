@@ -7,6 +7,7 @@
     import BookmarkEdit from "./BookmarkEdit.svelte";
 	import { bookmarkService } from "$lib/bookmarks";
 	import { notifications } from "$lib/notifications";
+	import { spotifyService } from "$lib/spotify";
     let backgroundImage: FileList; 
     let bottomImage: FileList;
     let defaultColors = {
@@ -32,10 +33,12 @@
         successColor: "#a3be8c",
     }
     let editing :number|undefined= undefined;
-    //object with all the same properties but every color is created with the new Color() consturctor
     let colors = defaultColors
     $: colorsConstructor = Object.entries(defaultColors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
+    
     let bms : Bookmark[] = [];
+    let timeRange = 'short_term';
+    
 
     bookmarks.subscribe(
         (value) => {
@@ -47,9 +50,14 @@
     bottomComponent.subscribe((n) => {
         if(bottomContainerType != n) bottomContainerType = n;
     })
-    
+
     onMount(() => {
         let col = localStorage.getItem("colors")
+        spotifyService.term.subscribe((n) => {
+            timeRange = n;
+            console.log(timeRange);
+        })
+            
         if(col){
             colors = JSON.parse(col);
         }else{
@@ -171,20 +179,34 @@
     {/if}
 </div>
 <div class="settings">
-    <span class="title">Bottom Container</span>
+    <span class="title">Spotify</span>
     <div class="actions">
+        <span class="action_title">Time Range</span>
+        <select class="action_button" bind:value={timeRange} on:change={() => {spotifyService.term.set(timeRange)}}>
+            <option value="short_term">Last month</option>
+            <option value="medium_term">Last 6 months</option>
+            <option value="long_term">Lifetime</option>
+        </select>
         
-
-        <span class="action_title">Image</span>
-        <button class="action_button" on:click={() => {document.getElementById('bottom_image')?.click()}}>Upload</button>
     </div>
+</div>
+<div class="settings">
+    <span class="title">Bottom Container</span>
     <div class="actions">
         <span class="action_title">Type</span>
         <select class="action_button" bind:value={bottomContainerType} on:change={() => {bottomComponent.set(bottomContainerType)}}>
             <option value="potd">NASA POTD</option>
             <option value="single-image">Image</option>
+            <option value="none">None</option>
         </select>
     </div>
+    {#if bottomContainerType == "single-image"}
+        
+    <div class="actions">
+        <span class="action_title">Image</span>
+        <button class="action_button" on:click={() => {document.getElementById('bottom_image')?.click()}}>Upload</button>
+    </div>
+    {/if}
 </div>
 <div class="settings">
     <span class="title">Background</span>

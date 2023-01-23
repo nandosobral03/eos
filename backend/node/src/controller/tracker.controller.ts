@@ -42,6 +42,7 @@ export const addTracked = async (req: Request, res: Response) => {
             `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(tracked.title)}&limit=1`
         )
         if(moreInfo.data.data.length === 0){
+
         }
 
         const anime = moreInfo.data.data[0];
@@ -49,26 +50,18 @@ export const addTracked = async (req: Request, res: Response) => {
         tracked.displayTitle = anime.title_english ? anime.title_english : anime.title; 
         tracked.image = anime.images.jpg.image_url ? anime.images.jpg.image_url : anime.imges.webp.image_url ? anime.images.webp.image_url : `${process.env.URL}/static/default.png`;
         tracked.status = anime.airing ? "Airing" : "Finished";
-        tracked.totalEpisodes = anime.airing ? null : anime.episodes;
-
-        if(tracked.status === "Finished" && tracked.currentEpisode > anime.totalEpisodes){
-            tracked.url = undefined;
-        }
-
+        tracked.totalEpisodes = anime.airing ? undefined : anime.episodes;
     }
     catch (error) {
-        let err = handleHTTPError(error);
-        res.status(err.status).send(err.message);
-        return;
+        tracked.id = 0;
+        tracked.status = "Unknown";
+        tracked.displayTitle = tracked.title.replace(/-/g, " ").split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+        tracked.totalEpisodes = undefined;
     }
 
     const alreadyInDb = await repo.getTrackedByTitle(tracked.title);
     if(alreadyInDb){
-        if(alreadyInDb.totalEpisodes && alreadyInDb.currentEpisode >= alreadyInDb.totalEpisodes){
-            await repo.updateTrackedEpisode(alreadyInDb.id!, tracked.currentEpisode);
-        }else{
-            await repo.updateTrackedEpisode(alreadyInDb.id!, tracked.currentEpisode, tracked.url!);
-        }
+        await repo.updateTrackedEpisode(alreadyInDb.id!, tracked.currentEpisode, tracked.url!);
         res.send("Updated");
         return;
     }
@@ -82,7 +75,7 @@ export const addTracked = async (req: Request, res: Response) => {
 export const deleteTracked = async (req: Request, res: Response) => {
     let {id} = req.params;
     try{
-        await repo.deleteTracked(parseInt(id));
+        await repo.deleteTracked(id);
     }
     catch (error) {
         let err = handleHTTPError(error);
@@ -94,30 +87,26 @@ export const deleteTracked = async (req: Request, res: Response) => {
 
 
 export const updateTrackedEpisode = async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const title = req.params.id;
     const currentEpisode = req.body.currentEpisode;
-    if(!id || !currentEpisode){
+    if(!title || !currentEpisode){
         res.status(400).send("Missing id or current episode");
         return;
     }
     try{
-       const alreadyInDb = await repo.getTrackedById(parseInt(id));
+       const alreadyInDb = await repo.getTrackedByTitle(title);
        if(!alreadyInDb){
             res.status(404).send("Not found");
             return;
        }
        if(parser.condition(alreadyInDb.url!)){
             const newUrl = parser.getUrl(alreadyInDb.url!, currentEpisode);
-        if(alreadyInDb){
-                if(alreadyInDb.totalEpisodes && alreadyInDb.currentEpisode >= alreadyInDb.totalEpisodes){
-                    await repo.updateTrackedEpisode(alreadyInDb.id!, currentEpisode);
-                }else{
+            if(alreadyInDb){
                     await repo.updateTrackedEpisode(alreadyInDb.id!, currentEpisode, newUrl);
+                    res.send("Updated");
+                    return;
                 }
-                res.send("Updated");
-                return;
             }
-        }
         else{
             res.status(400).send("Error parsing url");
             return;

@@ -55,12 +55,14 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        padding: 20px 0px;
     }
     .category{
         display: flex;
         flex-grow: 1;
         align-items: center;
         gap: 1rem;
+        max-height: clamp(50px, 25% ,100px);
         flex-wrap: no-wrap;
         overflow-x: auto;
     }

@@ -243,7 +243,14 @@ router.get("/currently-playing", async (req: Request, res: Response) => {
       });
       return;
     }else{
-      res.send({...currentlyPlaying.data,  is_playing: true});
+      if(currentlyPlaying.data.item){
+        res.send({...currentlyPlaying.data,  is_playing: true});
+      }
+      else{
+        res.send({
+          is_playing: false,
+        });
+      }
 
     }
     return;

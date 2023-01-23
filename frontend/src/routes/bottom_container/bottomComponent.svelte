@@ -22,6 +22,10 @@
         {
             name: "potd",
             component: NasaPotd
+        },
+        {
+            name: "none",
+            component: null
         }
     ]
 
@@ -33,18 +37,22 @@
         }
     })
 </script>
-<div class="wrapper">
-    {#each options as option}
+{#if active !== "none"}
+    <div class="wrapper">
+        {#each options as option}
             {#if option.name === active}
                 <svelte:component this={option.component} />
             {/if}
-    {/each}
-</div>
+        {/each}
+    </div>
+{/if}
 
 <style>
     .wrapper{
         width: 100%;
         height: calc(50% - 10px);
+        min-height: calc(50% - 10px);
+        max-height: calc(50% - 10px);
         object-fit: cover;
     }
    

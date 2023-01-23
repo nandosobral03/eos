@@ -3,7 +3,7 @@
 	import Tracker from "./tracker/tracker.svelte";
     import Settings from "./settings/settings.svelte";
     import Notes from "./notes/notes.svelte";
-    import Spotify from "./spotify-stats/spotify.svelte";
+    import Spotify from "./spotify/spotify.svelte";
     let options = [
         {
             name: "bookmarks",
@@ -59,10 +59,8 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        max-height: 45%;
         min-height: 45%;
         flex-grow: 1;
-        
     }
     .top-options{
         display: flex;
@@ -71,9 +69,9 @@
         align-items: center;
         gap: 20px;
         width: 100%;
-        height: 12%;
-        max-height: 12%;
-        min-height: 12%;
+        height: 50px;
+        max-height: 50px;
+        min-height: 50px;
         border-bottom: 1px solid var(--border-color);
     }
 

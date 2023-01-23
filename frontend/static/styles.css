@@ -78,3 +78,14 @@
     background: var(--accent-color-hover);
   }
 
+  a {
+    color: var(--text-color);
+  }
+
+  a:hover {
+    color: var(--text-color-accent);
+  }
+
+  a:visted {
+    color: var(--text-color);
+  }

@@ -17,9 +17,11 @@
         })
     })  
 </script>
+
 {#if !loading}
     <img class="image"  src={bottomUrl}  alt="bottom" />
 {/if}
+
 
 <style>
     .image{
