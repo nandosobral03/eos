@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bookmark, Note, RSSProvider } from "$lib/models/ServerData";
-	import { bookmarks, bottomComponent, notes, refreshBackground, rss, tracked } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, notes, refreshBackground, rss, themes, tracked } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./rss/RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
@@ -50,6 +50,10 @@
         })
         setUserSettings();
         setUserColors();
+        let themesStr = localStorage.getItem("themes") || "[]";
+        let parsed = JSON.parse(themesStr);
+        themes.set(parsed);
+
         if(data.access_token) localStorage.setItem("access_token", data.access_token);
         if(data.refresh_token) localStorage.setItem("refresh_token", data.refresh_token);
         if(data.expires_in) {

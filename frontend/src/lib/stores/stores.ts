@@ -6,6 +6,10 @@ export const notes: Writable<Note[]> = writable([]);
 export const bookmarks: Writable<Bookmark[]> = writable([]);
 export const rss: Writable<RSSProvider[]> = writable([]);
 export const tracked: Writable<Tracked[]> = writable([]);
+export const themes : Writable<{
+    id:string,
+    title: string,
+    theme:any}[]> = writable([])
 
 
 export const currentNote: Writable<{ content: string, writing: boolean, }> = writable(

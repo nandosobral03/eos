@@ -36,36 +36,37 @@
                 setCurrentTrack();
             }, 30000);
             return;
-        }
-        actions.forEach(a => a.allow = true);
-        current_track_duration = response.item?.duration_ms ?? 1;
-        current_track_progress = response.progress_ms ?? 0;
+        }else{
+            actions.forEach(a => a.allow = true);
+            current_track_duration = response.item?.duration_ms ?? 1;
+            current_track_progress = response.progress_ms ?? 0;
 
-        if(currentInterval){
-            clearInterval(currentInterval);
-        }
+            if(currentInterval){
+                clearInterval(currentInterval);
+            }
 
-        if(response.is_playing && response.actions){
-            for(let action of Object.keys(response.actions.disallows)){
-                let action_index = actions.findIndex(a => a.action === action);
-                if(action_index > -1){
-                    actions[action_index].allow = false;
+            if(response.is_playing && response.actions){
+                for(let action of Object.keys(response.actions.disallows)){
+                    let action_index = actions.findIndex(a => a.action === action);
+                    if(action_index > -1){
+                        actions[action_index].allow = false;
+                    }
                 }
             }
-        }
 
-        if(actions.find(a => a.action === "pausing")!.allow && response.is_playing){
-            currentInterval = setInterval(async () => {
-            if(show_player){
-                current_track_progress += 5000;
-                if(current_track_progress >= current_track_duration){
-                    setTimeout(() => {
-                        setCurrentTrack();
-                    }, 1000);
+            if(actions.find(a => a.action === "pausing")!.allow && response.is_playing){
+                currentInterval = setInterval(async () => {
+                if(show_player){
+                    current_track_progress += 5000;
+                    if(current_track_progress >= current_track_duration){
+                        setTimeout(() => {
+                            setCurrentTrack();
+                        }, 1000);
+                    }
+                    console.log(current_track_progress, current_track_duration)
                 }
-                console.log(current_track_progress, current_track_duration)
+            }, 5000);
             }
-        }, 5000);
         }
     }
 

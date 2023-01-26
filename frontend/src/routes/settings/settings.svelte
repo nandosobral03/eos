@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { bookmarks, bottomComponent, refreshBackground, refreshBottom } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, refreshBackground, refreshBottom, themes } from "$lib/stores/stores";
 	import axios from "axios";
 	import { onMount } from "svelte";
     import { Color, ColorInput } from 'color-picker-svelte'
@@ -35,7 +35,14 @@
     let editing :number|undefined= undefined;
     let colors = defaultColors
     $: colorsConstructor = Object.entries(defaultColors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
+    let currentThemes:{id:string,title:string, theme:any}[] = []
     
+    themes.subscribe((value) => {
+        currentThemes = value;
+        console.log(currentThemes)
+    })
+
+
     let bms : Bookmark[] = [];
     let timeRange = 'short_term';
     
@@ -97,9 +104,40 @@
         }
     }
 
+    const handleCreateTheme = () => {
+        let id = new Date().getTime() + "";
+        let title = prompt("Theme name");
+        if(title){
+            let newThemes = [...currentThemes,{id,title, theme:colors}]
+            localStorage.setItem("themes", JSON.stringify(newThemes));
+            themes.set(newThemes)
+        }
+    }
+
+
+    const applyTheme = (id:string) => {
+        let theme = currentThemes.find((x) => x.id == id);
+        if(theme){
+            console.log(colors)
+            colors = theme.theme;
+            applyColors();
+        }
+    }
+
+
+    const deleteTheme = (id:string) => {
+        let remaining = currentThemes.filter((x) => x.id !== id);
+        localStorage.setItem("themes", JSON.stringify(remaining));
+        themes.set(remaining)
+    }
+
     const updateColors = () => {
         colors = Object.entries(colorsConstructor).reduce((acc, [key, value]:any) => ({ ...acc, [key]: value.toHex8String() }), {}) as any;
         console.log(colors);
+        applyColors();
+    }
+
+    const applyColors = () => {
         localStorage.setItem("colors", JSON.stringify(colors));
         document.documentElement.style.setProperty('--background-color', colors.background);
         document.documentElement.style.setProperty('--text-color', colors.text);
@@ -122,6 +160,7 @@
         document.documentElement.style.setProperty('--danger-color', colors.dangerColor);
         document.documentElement.style.setProperty('--success-color', colors.successColor);
     }
+ 
 
     const restoreDefaults = () => {
         colors = defaultColors
@@ -214,6 +253,22 @@
         <span class="action_title">Background Image</span>
         <button class="action_button" on:click={() => {document.getElementById('background_image')?.click()}}>Upload</button>
     </div>
+</div>
+<div class="settings">
+    <span class="title">Themes</span>
+    {#each currentThemes as theme}
+        <div class="actions">
+            <span class="action_title">{theme.title}</span>
+            <div>
+                <button class="action_button" on:click={() => {applyTheme(theme.id)}}>Load</button>
+                <button class="action_button" on:click={() => {deleteTheme(theme.id)}}>Delete</button>
+            </div>
+        </div>
+    {/each}
+    <div class="actions">
+        <span class="action_title">Save current Theme</span>
+        <button class="action_button" on:click={() => {handleCreateTheme()}}>Save</button>
+    </div>  
 </div>
 <div class="settings">
     <span class="title">Colors</span>
