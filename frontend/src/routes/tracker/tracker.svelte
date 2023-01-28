@@ -9,7 +9,6 @@
 
     tracked.subscribe((value) => {
         trackerList = value;
-        console.log(trackerList);
     })
 </script>
 

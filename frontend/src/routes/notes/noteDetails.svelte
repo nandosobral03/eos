@@ -26,7 +26,6 @@
     }
     
     onMount(() => {
-        console.log(create)
         if(create){
             handleEdit()
         }
@@ -47,7 +46,6 @@
         noteContent = DOMPurify.sanitize(marked.parse(note.content))
         if(create){
             create = false;
-            console.log(create)
             try{
                 await noteService.createNote(note)
                 notifications.success("Note created", 500);

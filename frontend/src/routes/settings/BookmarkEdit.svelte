@@ -48,7 +48,6 @@
 
     const addLink = () => {
         bookmark.links = [...bookmark.links, {name: "", url: ""}];
-        console.log(bookmark);
     }
 
 </script>

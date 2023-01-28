@@ -30,7 +30,6 @@
 
         current_track = response;
         show_player = response.is_playing ?? false;
-        console.log(response)
         if(!show_player){
             setTimeout(() => {
                 setCurrentTrack();
@@ -63,7 +62,6 @@
                             setCurrentTrack();
                         }, 1000);
                     }
-                    console.log(current_track_progress, current_track_duration)
                 }
             }, 5000);
             }

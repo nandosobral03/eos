@@ -12,13 +12,11 @@
         let expiryDate = new Date(parseInt(expires_at!));
         let now = new Date();
 
-        console.log(expiryDate, now)
         if(access_token && refresh_token && expiryDate < now){
           await spotifyService.refreshAccessToken(refresh_token)
         }
         artists = await spotifyService.getUserTopArtists();
         songs = await spotifyService.getUserTopTracks();
-        console.log(artists, songs)
     })  
 
 </script>

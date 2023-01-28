@@ -9,6 +9,7 @@
 	import CurrentlyPlaying from "./spotify/currentlyPlaying.svelte";
 	import { spotifyService } from "$lib/spotify";
 	import type { Tracked } from "$lib/models/Tracker";
+	import Searchbar from "./searchbar/searchbar.svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
@@ -67,7 +68,6 @@
         let settings = localStorage.getItem("settings");
         if(!settings) return;
         let parsed = JSON.parse(settings);
-        console.log(parsed)
         if(parsed?.bottomComponent){
             bottomComponent.set(parsed.bottomComponent);
             
@@ -110,6 +110,7 @@
     </div>
     <Toast />
     <CurrentlyPlaying/>
+    <Searchbar/>
 </main>
 
 <style lang="scss">

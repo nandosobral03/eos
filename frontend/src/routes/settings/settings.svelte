@@ -39,7 +39,6 @@
     
     themes.subscribe((value) => {
         currentThemes = value;
-        console.log(currentThemes)
     })
 
 
@@ -62,7 +61,6 @@
         let col = localStorage.getItem("colors")
         spotifyService.term.subscribe((n) => {
             timeRange = n;
-            console.log(timeRange);
         })
             
         if(col){
@@ -118,7 +116,6 @@
     const applyTheme = (id:string) => {
         let theme = currentThemes.find((x) => x.id == id);
         if(theme){
-            console.log(colors)
             colors = theme.theme;
             applyColors();
         }
@@ -133,7 +130,6 @@
 
     const updateColors = () => {
         colors = Object.entries(colorsConstructor).reduce((acc, [key, value]:any) => ({ ...acc, [key]: value.toHex8String() }), {}) as any;
-        console.log(colors);
         applyColors();
     }
 

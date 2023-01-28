@@ -2,7 +2,7 @@ import { json} from '@sveltejs/kit';
 import path from 'path';
 import fs from 'fs';
 
-export async function POST({ request }:any) {
+export async function POST({ request }: { request: Request }) {
     const data = await request.formData() as FormData;
     if(!data){
         return new Response("No file uploaded",{ status: 400 })

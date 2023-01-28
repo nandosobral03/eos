@@ -1,5 +1,5 @@
 import axios from "axios"
-import { readable, writable } from "svelte/store"
+import { writable } from "svelte/store"
 import { environment } from "./environment"
 import type { RSSProvider } from "./models/ServerData"
 import { rss } from "./stores/stores"
@@ -43,8 +43,7 @@ const createRSSStore = () => {
         loading.set(true)
         const formData = new FormData();
         formData.append("image", imageFile);
-        console.log(imageFile)
-        const imageData = await axios.put(`${environment.api}/rss/${id}/image`, formData, {
+        await axios.put(`${environment.api}/rss/${id}/image`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -52,6 +51,16 @@ const createRSSStore = () => {
         await fetchRSSProviders();
     }
 
+
+    const massCreateRSSProviders = async (urls: string[]) => {
+        loading.set(true)
+        const response = await axios.post(
+            `${environment.api}/rss/mass`,
+            urls
+        )
+        fetchRSSProviders();
+        return response.data;
+    }
     
 
     return {
@@ -60,6 +69,7 @@ const createRSSStore = () => {
         deleteRSSProvider,
         updateRSSProvider,
         updateRSSProviderImage,
+        massCreateRSSProviders,
         loading,
     }
 

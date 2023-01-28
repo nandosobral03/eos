@@ -1,7 +1,7 @@
 import { environment } from '$lib/environment';
 import axios from 'axios';
 
-export const load = async (data:{url:any}) => {
+export const load = async (data:{url:URL}) => {
     try{
         const results = await Promise.all([
             getRssLinks(),
@@ -15,7 +15,6 @@ export const load = async (data:{url:any}) => {
         data.url.searchParams.delete("access_token")
         data.url.searchParams.delete("refresh_token")
         data.url.searchParams.delete("expires_in")
-        console.log("access_token", access_token)
         return {
             rss: results[0],
             bookmarks: results[1],

@@ -1,6 +1,5 @@
 import { writable, derived, type Writable } from "svelte/store"
 
-const TIMEOUT = 3000
 type Notification = { 
     id: string,
     type: string,
@@ -9,7 +8,7 @@ type Notification = {
 }
 
 
-function createNotificationStore (timeout:number = TIMEOUT) {
+function createNotificationStore () {
     const _notifications:Writable<Notification[]> = writable([])
 
     function send (message:string, type = "default", timeout:number) {
@@ -19,7 +18,6 @@ function createNotificationStore (timeout:number = TIMEOUT) {
         })
     }
 
-    let timers = []
 
     const notifications = derived(_notifications, ($_notifications, set) => {
         set($_notifications)

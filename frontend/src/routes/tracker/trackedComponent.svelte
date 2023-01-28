@@ -31,7 +31,6 @@
 
 
     const openEpisode = () => {
-        console.log(tracked.url)
         window.open(tracked.url, '_blank');
     };
 

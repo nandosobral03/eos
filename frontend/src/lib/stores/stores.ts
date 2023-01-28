@@ -9,6 +9,7 @@ export const tracked: Writable<Tracked[]> = writable([]);
 export const themes : Writable<{
     id:string,
     title: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     theme:any}[]> = writable([])
 
 
@@ -24,8 +25,6 @@ export const refreshBottom: Writable<boolean> = writable(false);
 
 function createBottomComponentStore() {
     const {set, subscribe } = writable('single-image');
-    let state : string
-      subscribe((v)=>state=v)
     function customSet(value: string) {
         set(value)
         const settings = localStorage.getItem('settings')

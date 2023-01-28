@@ -18,7 +18,6 @@
         if(data){
             let parsedData = JSON.parse(data);
             if(new Date().getDate() === new Date(parsedData.date).getDate()){
-                console.log("Using cached data");
                 potd = parsedData.data;
                 loading = false;
             }else{
@@ -43,7 +42,6 @@
             potd = response.data;
             loading = false;
         }
-        console.log(potd)
         if(potd.media_type != "image"){
             loading = false;
             bottomComponent.set("single-image")
