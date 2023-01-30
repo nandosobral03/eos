@@ -78,6 +78,7 @@
 
 
     .artist {
+        border-radius: 5px;
         width: 95%;
         font-size: 1.5rem;
         height: auto;
@@ -131,6 +132,7 @@
     }
 
     .song{
+        border-radius: 5px;
         width: 95%;
         font-size: 1rem;
         height: auto;

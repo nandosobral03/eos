@@ -134,6 +134,7 @@
 		padding-left: 10px;
 		overflow-y: scroll;
 		font-family: 'Hanken Grotesk', sans-serif;
+		border-radius: 5px;
 	}
 
 	.entry {
@@ -148,6 +149,7 @@
 		padding: 10px;
 		transition: background-color 0.2s ease-in-out;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+		border-radius: 5px;
 		*{
 			transition: color 0ms;
 		}

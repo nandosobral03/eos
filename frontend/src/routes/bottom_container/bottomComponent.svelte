@@ -51,9 +51,8 @@
     .wrapper{
         width: 100%;
         height: calc(50% - 10px);
-        min-height: calc(50% - 10px);
-        max-height: calc(50% - 10px);
         object-fit: cover;
+        flex-grow: 1;
     }
    
 </style>

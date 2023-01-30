@@ -14,6 +14,7 @@
 }
 :root {
     --background-color: #2f343f;
+    --background-color-opaque: #2f343f;
     --text-color: #fff;
     --text-color-accent: #88c0d0;
 
@@ -89,3 +90,7 @@
   a:visted {
     color: var(--text-color);
   }
+
+  .dragged-hover{
+    background-color: var(--accent-color-hover) !important;
+}

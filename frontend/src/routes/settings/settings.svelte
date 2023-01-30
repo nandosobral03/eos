@@ -32,9 +32,11 @@
         dangerColor: "#bf616a",
         successColor: "#a3be8c",
     }
+
+    
     let editing :number|undefined= undefined;
     let colors = defaultColors
-    $: colorsConstructor = Object.entries(defaultColors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
+    let colorsConstructor = Object.entries(colors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
     let currentThemes:{id:string,title:string, theme:any}[] = []
     
     themes.subscribe((value) => {
@@ -68,6 +70,7 @@
         }else{
             localStorage.setItem("colors", JSON.stringify(defaultColors));
         }
+        colorsConstructor = Object.entries(colors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
     })
 
 
@@ -135,7 +138,9 @@
 
     const applyColors = () => {
         localStorage.setItem("colors", JSON.stringify(colors));
+
         document.documentElement.style.setProperty('--background-color', colors.background);
+        document.documentElement.style.setProperty('--background-color-opaque', colors.background.slice(0,7));
         document.documentElement.style.setProperty('--text-color', colors.text);
         document.documentElement.style.setProperty('--text-color-accent', colors.textAccent);
         document.documentElement.style.setProperty('--text-color-hover', colors.textHover);
@@ -155,6 +160,8 @@
         document.documentElement.style.setProperty('--button-text-color-hover', colors.buttonTextHover);
         document.documentElement.style.setProperty('--danger-color', colors.dangerColor);
         document.documentElement.style.setProperty('--success-color', colors.successColor);
+
+        colorsConstructor = Object.entries(colors).reduce((acc, [key, value]) => ({ ...acc, [key]: new Color(value) }), {}) as any;
     }
  
 

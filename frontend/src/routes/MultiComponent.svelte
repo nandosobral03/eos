@@ -4,6 +4,9 @@
     import Settings from "./settings/settings.svelte";
     import Notes from "./notes/notes.svelte";
     import Spotify from "./spotify/spotify.svelte";
+	import { tabs } from "$lib/stores/stores";
+  
+
     let options = [
         {
             name: "bookmarks",
@@ -25,31 +28,48 @@
             name: "settings",
             component: Settings
         },
-        ];
+    ];
+    let currentOptions = options
     let active = "bookmarks";
+    tabs.subscribe( x => {
+        console.log(x);
+        currentOptions = options.filter(op => x.some(y => y.name == op.name && y.shown )).sort((a,b) => x.findIndex(y => y.name == a.name) - x.findIndex(y => y.name == b.name))
+        if(!currentOptions.some(op => op.name == active)){
+            if(currentOptions.length > 0){
+                active = currentOptions[0].name
+            }
+        }
+    })
+
 </script>
 
+{#if currentOptions.length > 0}
 <div class="container">
-    <div class="top-options">
-        {#each options as option}
-            <div class="option" 
-                class:active={option.name === active} 
-                on:click={() => active = option.name} 
-                on:keydown={(e) => {
-                    if(e.key === "Enter"){
-                        active = option.name;
-                    }
-                }}></div>
-        {/each}
+    {#if currentOptions.length > 1}
+        <div class="top-options">
+            {#each currentOptions as option}
+                <div class="option" 
+                    class:active={option.name === active} 
+                    on:click={() => active = option.name} 
+                    on:keydown={(e) => {
+                        if(e.key === "Enter"){
+                            active = option.name;
+                        }
+                    }}></div>
+            {/each}
+        </div>
+    {/if}
+
+        <div class="content">
+            {#each currentOptions as option}
+                {#if option.name === active}
+                    <svelte:component this={option.component} />
+                {/if}
+            {/each}
+        </div>
     </div>
-    <div class="content">
-        {#each options as option}
-            {#if option.name === active}
-                <svelte:component this={option.component} />
-            {/if}
-        {/each}
-    </div>
-</div>
+{/if}
+
 <style lang="scss">
     .container{
         background-color: var(--background-color);
@@ -59,8 +79,9 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        min-height: 45%;
+        height: 45%;
         flex-grow: 1;
+        border-radius: 5px;
     }
     .top-options{
         display: flex;
@@ -106,6 +127,7 @@
         align-items: center;
         overflow: auto;
         width: 100%;
+        height: 100%;
         flex-grow: 1;
     }
 

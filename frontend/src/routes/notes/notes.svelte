@@ -67,11 +67,11 @@
 <style lang="scss">
 	.wrapper {
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-        overflow: auto;
+		overflow: auto;
 		position: relative;
 		gap: 5px;
 	}

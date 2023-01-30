@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bookmark, Note, RSSProvider } from "$lib/models/ServerData";
-	import { bookmarks, bottomComponent, notes, refreshBackground, rss, themes, tracked } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, notes, refreshBackground, rss, tabs, themes, tracked } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./rss/RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
@@ -10,6 +10,7 @@
 	import { spotifyService } from "$lib/spotify";
 	import type { Tracked } from "$lib/models/Tracker";
 	import Searchbar from "./searchbar/searchbar.svelte";
+	import SettingsModal from "./settings/settingsModal.svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
@@ -66,11 +67,35 @@
     const setUserSettings = () =>{
         setUserColors();
         let settings = localStorage.getItem("settings");
-        if(!settings) return;
+        if(!settings) settings = "{}";
         let parsed = JSON.parse(settings);
         if(parsed?.bottomComponent){
             bottomComponent.set(parsed.bottomComponent);
-            
+        }else{
+            bottomComponent.set("single-image");
+        }
+        if(parsed?.tabs){
+            tabs.set(parsed.tabs)
+        }else{
+            const allTabs = [
+                {
+                    name:"bookmarks",
+                    shown: true
+                },
+                {
+                    name:"notes",
+                    shown: true
+                },
+                {
+                    name:"tracker",
+                    shown: true
+                },
+                {
+                    name:"spotify",
+                    shown: true
+                }
+            ]
+            tabs.set(allTabs)
         }
     }
 
@@ -80,6 +105,7 @@
         if(!colorsString) return;
         const colors = JSON.parse(colorsString);
         document.documentElement.style.setProperty('--background-color', colors.background);
+        document.documentElement.style.setProperty('--background-color-opaque', colors.background.slice(0,7));
         document.documentElement.style.setProperty('--text-color', colors.text);
         document.documentElement.style.setProperty('--text-color-accent', colors.textAccent);
         document.documentElement.style.setProperty('--text-color-hover', colors.textHover);
@@ -111,6 +137,7 @@
     <Toast />
     <CurrentlyPlaying/>
     <Searchbar/>
+    <SettingsModal />
 </main>
 
 <style lang="scss">

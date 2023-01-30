@@ -5,7 +5,7 @@
     let searchString = "";
     onMount(() => {
         let searchbar = document.getElementById("searchbar")!;
-        document.onkeydown = (e) => {
+        document.addEventListener("keydown", (e) => {
             if (e.ctrlKey && e.key === "Enter") {
                 searchString = "";
                 showSearchbar = !showSearchbar;
@@ -14,7 +14,9 @@
             if (showSearchbar && e.key === "Enter" && !e.ctrlKey) {
                 window.open("https://www.google.com/search?q=" + searchString, "_blank");
             }
-        };
+        })
+
+        
         searchbar.onblur = () => {
             showSearchbar = false;
         };
@@ -24,13 +26,13 @@
 </script>
 
 <div class="searchbar" style:display={showSearchbar ? "block" : "none"}>
-    <input placeholder="Search"  id="searchbar" bind:value={searchString}/>
+    <input placeholder="Search"  id="searchbar" bind:value={searchString} autocomplete="off" />
 </div>
 
 <style lang="scss">
     .searchbar{
         position: fixed;
-        background-color: var(--background-color);
+        background-color:  var(--background-color-opaque);
         height: clamp(50px, 8vh, 100px);
         width: clamp(500px, 45vw, 700px);
         transform: translateY(-300%);

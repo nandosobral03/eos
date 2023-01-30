@@ -29,9 +29,9 @@
 		justify-content: flex-start;
         overflow: auto;
 		position: relative;
-		gap: 5px;
+		gap: 10px;
         padding: 10px;
-       
+		
 	}
 
 

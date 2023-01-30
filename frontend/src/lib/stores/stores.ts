@@ -23,6 +23,11 @@ export const currentNote: Writable<{ content: string, writing: boolean, }> = wri
 export const refreshBackground: Writable<boolean> = writable(false);
 export const refreshBottom: Writable<boolean> = writable(false);
 
+
+
+
+
+
 function createBottomComponentStore() {
     const {set, subscribe } = writable('single-image');
     function customSet(value: string) {
@@ -43,3 +48,33 @@ function createBottomComponentStore() {
   }
 
 export const bottomComponent = createBottomComponentStore();
+
+function createTabsComponentStore() {
+    const {set, subscribe } = writable([]) as Writable<{
+        name: string,
+        shown: boolean,
+    }[]>;
+    function customSet(value: {
+        name: string,
+        shown: boolean,
+    }[]) {
+        set(value)
+        const settings = localStorage.getItem('settings')
+        if(settings){
+            const parsed = JSON.parse(settings)
+            parsed.tabs = value
+            localStorage.setItem('settings', JSON.stringify(parsed))
+        }else{
+            localStorage.setItem('settings', JSON.stringify({tabs: value}))
+        }
+    }
+
+
+
+    return {
+      subscribe,
+      set:customSet,
+    };
+  }
+
+export const tabs = createTabsComponentStore();
