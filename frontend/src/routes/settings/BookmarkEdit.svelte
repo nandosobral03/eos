@@ -97,7 +97,7 @@
 
 <style lang="scss">
     .wrapper{
-        background-color: var(--accent-color);
+        border: 1px solid var(--accent-color);
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -162,7 +162,7 @@
     .button{
         margin: 5px 0px;
         background-color: var(--button-color);
-        color: var(---button-text-color);
+        color: var(--button-text-color);
         border: none;
         border-radius: 5px;
         padding: 5px;
@@ -172,7 +172,7 @@
         transition: all 0.2s ease-in-out;
         &:hover{
             background-color: var(--button-color-hover);
-            color: var(---button-text-color-hover);
+            color: var(--button-text-color-hover);
         }
     }
 

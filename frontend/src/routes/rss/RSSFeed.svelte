@@ -7,7 +7,6 @@
 	import { onMount } from 'svelte';
 	import { rssService } from '$lib/rss';
 	let urls: Array<RSSProvider> = [];
-	let currentTab = 'rss';
 	let loading = true;
 	let rssfeed: Entry[] = [];
 	onMount(async () => {
@@ -83,15 +82,6 @@
 </script>
 
 <div class="container">
-	<div class="header">
-		<div class="options" class:active={currentTab === 'rss'} on:click={() => (currentTab = 'rss')} on:keydown={(e) => { if (e.key === 'Enter') currentTab = 'rss'; }}>
-			<span class="material-symbols-outlined"> rss_feed </span>
-		</div>
-		<div class="options" class:active={currentTab === 'settings'} on:click={() => (currentTab = 'settings')} on:keydown={(e) => { if (e.key === 'Enter') currentTab = 'settings'; }}>
-			<span class="material-symbols-outlined"> settings </span>
-		</div>
-	</div>
-	{#if currentTab === 'rss'}
 		{#if loading}
 			<div class="loading">
 				<img src="./spinner.svg" alt="loading" />
@@ -115,9 +105,6 @@
 				</div>
 			{/each}
 		{/if}
-	{:else}
-		<RSSSettings providers={urls} />
-	{/if}
 </div>
 
 <style lang="scss">
@@ -137,6 +124,8 @@
 		border-radius: 5px;
 	}
 
+
+	
 	.entry {
 		width: calc(95% - 20px);
 		height: 200px;
@@ -150,9 +139,7 @@
 		transition: background-color 0.2s ease-in-out;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 		border-radius: 5px;
-		*{
-			transition: color 0ms;
-		}
+		
 		cursor: pointer;
 
 		&:hover {

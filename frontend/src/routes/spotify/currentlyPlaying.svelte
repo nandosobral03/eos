@@ -114,7 +114,12 @@
     },
     ]
 
-
+    const closePlayer = () =>{
+        show_player = false;
+        setTimeout(async () => {
+            await setCurrentTrack();
+        }, 30 * 60 * 1000);
+    }
 </script>
 
 {#if show_player && current_track.item}
@@ -127,7 +132,7 @@
         </div>
         <div class="details_actions">
             <div class="details">
-                <span class="title">{current_track.item.name}</span>
+                <div class="title"><span>{current_track.item.name}</span> <span class="material-symbols-outlined close" on:click={closePlayer} >close</span></div>
                 <span class="artists">
                     {#each current_track.item.artists as artist, i}
                         {artist.name} {i < current_track.item.artists.length - 1 ? ', ' : ''}
@@ -182,6 +187,9 @@
             .title{
                 font-size: 1rem;
                 font-weight: bold;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
             }
             .artists{
                 font-size: 0.8rem;
@@ -230,6 +238,13 @@
             max-width: 100%;
             background-color: #1db954;
             transition:width 6s linear;
+        }
+    }
+
+    .close{
+        cursor: pointer;
+        &:hover{
+            color: var(--danger-color);
         }
     }
 

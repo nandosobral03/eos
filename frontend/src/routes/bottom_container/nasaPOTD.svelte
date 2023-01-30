@@ -91,6 +91,7 @@
         box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
         h1{
             font-size: 1.5rem;
+            font-weight: 400;
             margin-bottom: 20px;
             color: var(--text-color-accent)
         }

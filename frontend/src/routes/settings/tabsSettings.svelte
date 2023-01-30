@@ -21,7 +21,6 @@
         // is the index of the item being dragged and
         // the index of the tab from which it is leaving.
         hoveringOverTab = currentTabs[itemIndex].name;
-        console.log("dragging")
 		const data = {itemIndex};
     	event.dataTransfer?.setData('text/plain', JSON.stringify(data));
 	}
@@ -30,7 +29,6 @@
         hoveringOverTab = "";
         const json = event.dataTransfer?.getData("text/plain");
         let {itemIndex} = JSON.parse(json!);
-        console.log(`dropping from ${itemIndex} to ${currentIndex}`)
         if(currentIndex == Math.floor(currentIndex)){
             if(itemIndex > currentIndex){
                 currentIndex -= 0.5;
@@ -42,7 +40,6 @@
         aux = [aux, currentTabs.map((tab,i) => {
             return {name: tab.name, shown: tab.shown, index: i}
         }).filter(tab => tab.index != itemIndex)].flat()
-        console.log(aux)
 
         currentTabs = aux.sort((a,b) => a.index - b.index).map(tab => {
             return {name: tab.name, shown: tab.shown}
@@ -61,8 +58,9 @@
 
 </script>
 
+
 <div class="tab-list"
-  
+
 >
 <div class="separator" 
 on:dragover={event =>{
@@ -115,14 +113,23 @@ on:drop={event => drop(event, -1)}
 </div>
 
 <style lang="scss">
+    .title{
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 10px;
+    }
+
     .tab-list{
+        border-radius: 5px;
         display: flex;
         flex-direction: column;
-        padding: 10px;
+        padding: 15px;
+        padding-top: 5px;
         color: var(--text-color);
         height: 100%;
         .tab{
-            background-color: var(--accent-color);
+            border: 1px solid var(--accent-color);
             padding: 15px;
             border-radius: 5px;
             display: flex;
@@ -161,7 +168,7 @@ on:drop={event => drop(event, -1)}
         .ball{
             height: 100%;
             aspect-ratio: 1/1;
-            background-color: var(--text-color);
+            background-color: var(--accent-color-hover);
             border-radius: 50px;
             transition: all 300ms;
             position: absolute;

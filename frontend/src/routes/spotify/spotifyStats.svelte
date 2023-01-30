@@ -76,7 +76,9 @@
         padding: 10px;
     }
 
-
+    *{
+            transition: all 0ms;
+        }
     .artist {
         border-radius: 5px;
         width: 95%;
@@ -91,6 +93,7 @@
         padding: 10px;
         gap: 10px;
         cursor: pointer;
+       
         &:hover{
             background-color: var(--accent-color-hover);
             color: var(--text-color-hover);

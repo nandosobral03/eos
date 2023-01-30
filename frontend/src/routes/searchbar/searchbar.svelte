@@ -37,6 +37,7 @@
         width: clamp(500px, 45vw, 700px);
         transform: translateY(-300%);
         padding: 20px 30px;
+        z-index: 101;
         border: 1px solid var(--border-color);
         box-shadow: 0 0 10px var(--border-color);
         input{

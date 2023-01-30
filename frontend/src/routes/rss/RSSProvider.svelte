@@ -78,7 +78,7 @@
     <div class="provider">
         <div class="info">
             <img class="provider-image" src={provider.image} alt="provider" />
-            <div class="provider-url">
+            <div class="provider-url" on:error={() => provider.image = "https://via.placeholder.com/150"}>
                 {provider.url}
             </div>
         </div>
@@ -121,7 +121,7 @@
         gap: 20px;
         padding: 10px;
         &.edit{
-            background-color: var(--accent-color);
+            border: 1px solid var(--accent-color);
         }
     }
 

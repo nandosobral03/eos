@@ -88,8 +88,12 @@
 		margin-right: auto;
 		border-radius: 5px;
 		cursor: pointer;
+		*{
+			transition: color 0ms;
+		}
 		&:hover {
 			background-color: var(--accent-color-hover);
+			color: var(--text-color-hover);
 		}
 		&:first-child {
 			margin-top: 5px;
