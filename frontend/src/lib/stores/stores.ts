@@ -12,6 +12,7 @@ export const themes : Writable<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     theme:any}[]> = writable([])
 
+export const currentlyPlaying: Writable<boolean> = writable(false);
 
 export const currentNote: Writable<{ content: string, writing: boolean, }> = writable(
     {
@@ -20,7 +21,7 @@ export const currentNote: Writable<{ content: string, writing: boolean, }> = wri
     }
 );
 
-export const refreshBackground: Writable<boolean> = writable(false);
+export const refreshBackground: Writable<number> = writable(0);
 export const refreshBottom: Writable<boolean> = writable(false);
 
 

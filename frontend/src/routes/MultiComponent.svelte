@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Bookmarks from "./bookmarks/bookmarks.svelte";
 	import Tracker from "./tracker/tracker.svelte";
-    import Settings from "./settings/settings.svelte";
     import Notes from "./notes/notes.svelte";
     import Spotify from "./spotify/spotify.svelte";
 	import { tabs } from "$lib/stores/stores";
@@ -24,10 +23,7 @@
             name: "spotify",
             component: Spotify
         },
-        {
-            name: "settings",
-            component: Settings
-        },
+      
     ];
     let currentOptions = options
     let active = "bookmarks";
@@ -82,6 +78,7 @@
         height: 45%;
         flex-grow: 1;
         border-radius: 5px;
+		box-shadow: 2px 2px 5px 0px var(--shadow-color)
     }
     .top-options{
         display: flex;

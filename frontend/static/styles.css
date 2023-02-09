@@ -17,6 +17,8 @@
     --background-color-opaque: #2f343f;
     --text-color: #fff;
     --text-color-accent: #88c0d0;
+    --shadow-color : #000000;
+    
 
     --icon-color: #fff;
     --icon-color-active: #fff;
@@ -71,7 +73,7 @@
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: var(--accent-color);
-    border-radius: 2px;
+    border-radius: 5px;
   }
   
   /* Handle on hover */

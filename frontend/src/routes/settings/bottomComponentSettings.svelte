@@ -64,12 +64,7 @@
     <input type="file" accept="image/*" id="bottom_image" bind:files={bottomImage} on:change={setBottomImage} style="display: none;" />
 
 <style lang="scss">
-    .title{
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 10px;
-    }
+  
     .wrapper{
             border-radius: 5px;
             display: flex;

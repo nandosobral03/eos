@@ -5,6 +5,7 @@
 	import { onMount } from "svelte";
     let defaultColors = {
         background: "#2f343f",
+        shadowColor: "#000000",
         accentColor: "#4b5262",
         accentColorHover: "#88c0d0",
         text: "#ffffff",
@@ -53,7 +54,7 @@
                 },
             });
             if(data.status == 200){
-                refreshBackground.update(n => !n);
+                refreshBackground.update(n => n + 1);
             }
         }
     
@@ -83,6 +84,7 @@
 
         document.documentElement.style.setProperty('--background-color', colors.background);
         document.documentElement.style.setProperty('--background-color-opaque', colors.background.slice(0,7));
+        document.documentElement.style.setProperty('--shadow-color', colors.shadowColor);
         document.documentElement.style.setProperty('--text-color', colors.text);
         document.documentElement.style.setProperty('--text-color-accent', colors.textAccent);
         document.documentElement.style.setProperty('--text-color-hover', colors.textHover);
@@ -204,7 +206,7 @@
                 <div class="setting-item-value">
                     <button class="action_button" on:click={updateColors}>Update</button>
                     <button class="action_button" on:click={discardChanges}>Discard</button>
-                    <button class="action_button" on:click={restoreDefaults}>Restore Defaults</button>
+                    <button class="action_button" on:click={restoreDefaults}>Restore</button>
                 </div>
 
             </div>
@@ -217,21 +219,16 @@
 <input type="file" accept="image/*" id="background_image" bind:files={backgroundImage} on:change={setBackgroundImage} style="display: none;" />
 
 <style lang="scss">
-      .title{
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 10px;
-    }
+
     .wrapper{
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            color: var(--text-color);
-            height: 100%;
-            gap: 10px;
-            overflow: auto;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        color: var(--text-color);
+        height: 100%;
+        gap: 10px;
+        overflow: auto;
     }
 
     .setting{
@@ -288,5 +285,27 @@
              }
     .color_picker{
         width: 45%;
+    }
+
+
+    @media only screen and (max-width: 800px) {
+        .wrapper{
+            padding: 10px;
+        }
+        .setting{
+            padding: 10px;
+        }
+        .setting-list{
+            .setting-item{
+                .setting-item-title{
+                    flex-shrink: 1;
+                    width: 30px;
+                }
+            }
+        }
+        .color_picker{
+            width: 60% !important;
+        }
+
     }
 </style>

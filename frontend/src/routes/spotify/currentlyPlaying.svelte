@@ -132,7 +132,7 @@
         </div>
         <div class="details_actions">
             <div class="details">
-                <div class="title"><span>{current_track.item.name}</span> <span class="material-symbols-outlined close" on:click={closePlayer} >close</span></div>
+                <div class="title"><span>{current_track.item.name}</span> <span class="material-symbols-outlined close" on:click={closePlayer} on:keydown={closePlayer} >close</span></div>
                 <span class="artists">
                     {#each current_track.item.artists as artist, i}
                         {artist.name} {i < current_track.item.artists.length - 1 ? ', ' : ''}

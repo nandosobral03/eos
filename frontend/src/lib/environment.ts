@@ -1,4 +1,3 @@
 export const environment = {
-    api: "http://localhost:3000"
-
+    api: "http://eos.aornum.xyz/backend"
 }

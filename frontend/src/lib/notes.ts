@@ -5,22 +5,38 @@ import { notes } from "./stores/stores"
 
 const createNoteService = () => {
     const updateNote = async (note: Note) => {
-        await axios.put(`${environment.api}/notes/${note.id}`, note)
+        await axios.put(`${environment.api}/notes/${note.id}`, note,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         await getNotes()
     }
     const deleteNote = async (id: number) => {
-        await axios.delete(`${environment.api}/notes/${id}`)
+        await axios.delete(`${environment.api}/notes/${id}`,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         await getNotes()
 
     }
     const createNote = async (note: Note) => {
-        await axios.post(`${environment.api}/notes`, note)
+        await axios.post(`${environment.api}/notes`, note,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         await getNotes()
 
     }
     
     const getNotes = async () => {
-        const response = await axios.get(`${environment.api}/notes`)
+        const response = await axios.get(`${environment.api}/notes`,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         notes.set(response.data)
     }
 

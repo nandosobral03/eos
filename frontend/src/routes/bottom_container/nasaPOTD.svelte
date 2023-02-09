@@ -88,7 +88,7 @@
         flex-direction: column;
         padding: 20px;
         margin: 20px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+        box-shadow: 2px 2px 5px 5px var(--shadow-color);
         h1{
             font-size: 1.5rem;
             font-weight: 400;

@@ -14,55 +14,58 @@
 			urls = r;
 			loadRSSFeed();
 		});
-		loadRSSFeed();
 	});
 
-
 	const loadRSSFeed = async () => {
+		rssfeed = [];
 		const { read } = await import('@extractus/feed-extractor');
-		const allFeeds = (
-			await Promise.allSettled(
-				urls.map(async (r: RSS) => {
-					const feed = await read(r.url);
-					let entries =
-						feed.entries?.map((e: any) => {
-							return {
-								...e,
-								image: r.image
-							};
-						}) || [];
-					//Check for custom mapper
-					if (customMappers[r.url]) {
-						entries = entries?.map(customMappers[r.url]);
+		await Promise.allSettled(
+			urls.map(async (r: RSS) => {
+				const feed = await read(r.url, {
+					getExtraEntryFields: (feedEntry:any) => {
+						const { updated,published } = feedEntry;
+						return {
+							publishedYT: published || undefined,
+							updated: updated ? updated : feedEntry.published 
+						};
 					}
+				}
+				);
+				let entries =
+					feed.entries?.map((e: any) => {
+						return {
+							...e,
+							image: r.image
+						};
+					}) || [];
+				//Check for custom mapper
+				if (customMappers[r.url]) {
+					entries = entries?.map(customMappers[r.url]);
+				}
+				
+				const filtered = entries.slice(0, 10).filter((e: Entry) => {
+					const now = new Date();
+					const published = new Date(e.publishedYT || e.published);
+					const diff = now.getTime() - published.getTime();
+					const diffHours = diff / (1000 * 3600);
+					return diffHours < 24;
+				});
+				const sorted = filtered.sort((a: Entry, b: Entry) => {
+					const aDate = new Date(a.published);
+					const bDate = new Date(b.published);
+				
+					return bDate.getTime() - aDate.getTime();
+				});
 
-					return entries;
-				})
-			)
-		)
-		.filter((p) => p.status === 'fulfilled').map((p: any) => p.value)
-			.flat()
-			.sort((a: Entry, b: Entry) => {
-				return new Date(b.published).getTime() - new Date(a.published).getTime();
+				rssfeed = rssfeed.concat(sorted).sort((a: Entry, b: Entry) => {
+					const aDate = new Date(a.published);
+					const bDate = new Date(b.published);
+				
+					return bDate.getTime() - aDate.getTime();
+				});
+				loading = false;
 			})
-			.filter((e: Entry) => {
-				// only keep the ones published in the last 24 hours
-				const now = new Date();
-				const published = new Date(e.published);
-				const diff = now.getTime() - published.getTime();
-				const diffHours = diff / (1000 * 3600);
-				return diffHours < 24;
-			}) || [
-			{
-				title: 'No feeds found',
-				link: '',
-				published: '',
-				description: '',
-				image: ''
-			}
-		];
-		loading = false;
-		rssfeed = allFeeds;
+		)
 	};
 
 	const getTimeAgo = (d: Date) => {
@@ -114,7 +117,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: clamp(300px, 35vw, 450px);
+		width: clamp(300px, 35vw, 400px);
 		height: clamp(500px, 90vh, 800px);
 		gap: 10px;
 		padding: 10px 0px;
@@ -122,13 +125,14 @@
 		overflow-y: scroll;
 		font-family: 'Hanken Grotesk', sans-serif;
 		border-radius: 5px;
+		box-shadow: 2px 2px 5px 0px var(--shadow-color)
 	}
+
 
 
 	
 	.entry {
 		width: calc(95% - 20px);
-		height: 200px;
 		background-color: var(--accent-color);
 		display: flex;
 		flex-direction: row;
@@ -137,9 +141,11 @@
 		gap: 10px;
 		padding: 10px;
 		transition: background-color 0.2s ease-in-out;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 2px 2px 10px -2px var(--shadow-color);
 		border-radius: 5px;
-		
+		*{
+			transition: 0ms color
+		};
 		cursor: pointer;
 
 		&:hover {
@@ -166,6 +172,7 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		border-radius: 3px;
 	}
 
 	.info {
@@ -178,12 +185,12 @@
 	}
 
 	.title {
-		font-size: 1rem;
+		font-size: 0.9rem;
 		font-weight: bold;
 	}
 
 	.date {
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 		align-self: flex-end;
 	}
 
@@ -200,45 +207,15 @@
         }
 	}
 
-	.header {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-		width: 100%;
-		min-height: 20px;
-		background-color: transparent;
-	}
-
-	.options {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 20px;
-		height: 20px;
-		margin-right: 5px;
-		background-color: var(--icon-background);
-		color: var(--icon-color) !important;
-		text-align: center;
-		border-radius: 25%;
-		cursor: pointer;
-		transition: color 0ms;
-		&.active {
-			background-color: var(--icon-background-active);
-			color: var(--icon-color-active) !important;
+	@media only  screen and (max-width: 800px){
+		.container {
+			min-height: 800px;
+			height: unset;
+			width: 90%;
+			margin-bottom: 50px;
 		}
-		&:hover {
-			background-color: var(--icon-background-hover);
-			color: var(--icon-color-hover) !important;
-		}
-		
-
-		.material-symbols-outlined {
-			font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 48;
-			font-size: 15px;
-			margin: auto;
-			user-select: none; /* Non-prefixed version, currently
-							supported by Chrome and Opera */
-			
-		}
+			.entry{
+				max-height: 100px;
+			}
 	}
 </style>

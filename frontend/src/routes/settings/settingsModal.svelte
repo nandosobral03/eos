@@ -6,7 +6,7 @@
 	import SpotifySettings from "./spotifySettings.svelte";
 	import StyleSettings from "./styleSettings.svelte";
 	import TabsSettings from "./tabsSettings.svelte";
-    let showModal = false;
+    export let showModal = false;
 
     let options = [
         {
@@ -38,11 +38,13 @@
     onMount(() => {
         let modal = document.getElementById("modal")!;
         document.addEventListener("keydown", (e) => {
-            if (e.key === "`") {
+            if (e.key === "`" || e.key === "|") {
                 showModal = !showModal;
                 window.setTimeout(() => modal?.focus(), 0);
             }
-           
+            if (e.ctrlKey && e.key === "Enter") {
+                showModal = false;
+            }
             if(e.key === "Escape"){
                 showModal = false;
             }
@@ -87,6 +89,8 @@
         z-index: 100;
         border-radius: 5px;
         padding: 5px;
+        box-shadow: 2px 2px 5px -1px var(--shadow-color)
+        
     }
 
    
@@ -95,12 +99,13 @@
         width: 25%;
         height: 100%;
         overflow: auto;
-        border-right: 1px solid var(--border-color);
+        border-right: 1px solid var(--accent-color);
         color: var(--text-color);
         display: flex;
         flex-direction: column;
         gap: 15px;
         padding: 10px 0px;
+        margin: 10px 0px;
         .option{
             width: auto;
             height: 10%;
@@ -120,7 +125,7 @@
     }
     .settings{
         flex-grow: 1;
-        height: 100%;
+        min-height: 100%;
     }
 
    
@@ -129,4 +134,41 @@
         color: var(--text-color-hover) !important;
     }
 
+
+
+    @media only screen and (max-width: 800px) {
+        .modal{
+            top: 50px;
+            width: 90%;
+            height: 90%;
+            min-width: unset;
+            min-height: unset;
+
+            flex-direction: column;
+        }
+        .settings-sidebar{
+            flex-direction: row;
+            display: flex;
+            justify-content: space-evenly;
+            width: 100% !important;
+            flex-wrap: wrap;
+            height: 20%;
+
+            border-right: none;
+            border-bottom: 1px solid var(--accent-color);
+            .option{
+                width: fit-content;
+                display: flex;
+               justify-content: center;
+                min-width: 25%;
+                margin: 0px;
+                font-size: 0.8rem;
+            }
+        }
+        .settings{
+            height: 80%;
+            min-height: 80%;
+            flex-grow: 1;
+        }
+    }
 </style>

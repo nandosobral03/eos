@@ -28,7 +28,11 @@ const createspotifyService = () => {
     const refreshAccessToken = async (refresh_token:string) => {
         const tokenData = await axios.get(
             `${environment.api}/spotify/refresh_token?refresh_token=${refresh_token}`
-          )
+            ,{
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            })
            localStorage.setItem("access_token", tokenData.data.access_token);
            localStorage.setItem("expires_at", (new Date().getTime() + tokenData.data.expires_in * 1000).toString());
         }
@@ -47,9 +51,13 @@ const createspotifyService = () => {
         const res = await axios.get(
             `${environment.api}/spotify/top-tracks?term=${_term}`,
             {
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }}
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+        }
         )
 
         if(cached) {
@@ -88,9 +96,13 @@ const createspotifyService = () => {
         const res = await axios.get(
             `${environment.api}/spotify/top-artists?term=${_term}`,
             {
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }}
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            }
         )
 
 
@@ -118,9 +130,13 @@ const createspotifyService = () => {
         const res = await axios.get(
             `${environment.api}/spotify/currently-playing`, 
             {
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }}
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            }
         )
         return res.data
     }
@@ -130,11 +146,11 @@ const createspotifyService = () => {
             `${environment.api}/spotify/start-playback`,
             {},
             {
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
                 },
-                params: {
-                    authorization: `Bearer ${localStorage.getItem("access_token")}`
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
                 }
         
         }
@@ -147,12 +163,12 @@ const createspotifyService = () => {
             `${environment.api}/spotify/pause-playback`,
             {},
             {
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            },
-            params: {
-                authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
         }
         )
         return res.data
@@ -163,9 +179,12 @@ const createspotifyService = () => {
             `${environment.api}/spotify/next-track`,
             {},
             {   
-                headers: {
+                params: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }}
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }}
         )
         return res.data
     }
@@ -175,12 +194,11 @@ const createspotifyService = () => {
             `${environment.api}/spotify/previous-track`,
             {},
             {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`
-        
-                },
                 params: {
-                    authorization: `Bearer ${localStorage.getItem("access_token")}`
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`
+                },
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
                 }
         
         }

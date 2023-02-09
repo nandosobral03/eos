@@ -113,13 +113,7 @@ on:drop={event => drop(event, -1)}
 </div>
 
 <style lang="scss">
-    .title{
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 10px;
-    }
-
+ 
     .tab-list{
         border-radius: 5px;
         display: flex;

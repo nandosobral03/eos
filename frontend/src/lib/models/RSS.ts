@@ -8,4 +8,5 @@ export type Entry = {
     published: string;
     description: string;
     image: string;
+    publishedYT?: string;
 };

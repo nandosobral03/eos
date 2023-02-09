@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bookmark, Note, RSSProvider } from "$lib/models/ServerData";
-	import { bookmarks, bottomComponent, notes, refreshBackground, rss, tabs, themes, tracked } from "$lib/stores/stores";
+	import { bookmarks, bottomComponent, currentlyPlaying, notes, refreshBackground, rss, tabs, themes, tracked } from "$lib/stores/stores";
 	import Multicomponent from "./MultiComponent.svelte";
     import Rssfeed from "./rss/RSSFeed.svelte";
     import Toast from "./common/toast.svelte";
@@ -11,6 +11,7 @@
 	import type { Tracked } from "$lib/models/Tracker";
 	import Searchbar from "./searchbar/searchbar.svelte";
 	import SettingsModal from "./settings/settingsModal.svelte";
+	import Login from "./login/login.svelte";
     export let data:{
         rss: Array<RSSProvider>
         notes: Array<Note>
@@ -19,39 +20,52 @@
         access_token?: string
         refresh_token?: string   
         expires_in?: number   
+        background_url: string
     };
     notes.set(data.notes);
     bookmarks.set(data.bookmarks);
     rss.set(data.rss);
     tracked.set(data.tracked);
-    
-
+    let showModal = false;
+    let playing: boolean;
+    currentlyPlaying.subscribe(x => {
+        playing = x
+    });
+    let loggedIn  = false;
     let backgroundBlob: Blob;
-    onMount(async () => {
+
+    const setup = async () => {
+        const token = localStorage.getItem("token");
+        if(!token){
+            loggedIn = false;
+        }else{
+            loggedIn = true;
+        }
+        setUserSettings();
         const access_token = localStorage.getItem("access_token");
         const refresh_token = localStorage.getItem("refresh_token");
         const expires_at = localStorage.getItem("expires_at");
         const expiryDate = new Date(parseInt(expires_at!));
         let now = new Date();
         
-        if(access_token && refresh_token && expiryDate < now){
-          await spotifyService.refreshAccessToken(refresh_token)
+        if(loggedIn && access_token && refresh_token && expiryDate < now){
+            await spotifyService.refreshAccessToken(refresh_token)
         }
 
-        const response = await fetch('/settings/background');
-        backgroundBlob = await response.blob();
-        const url = URL.createObjectURL(backgroundBlob);
-        document.getElementById('main')!.style.backgroundImage = `url(${url})`;
+       
+        document.getElementById('main')!.style.backgroundImage = `url(${data.background_url})`;
         refreshBackground.subscribe(n => {
             const response = fetch('/settings/background');
-            response.then(async (res) => {
-                backgroundBlob = await res.blob();
-                const url = URL.createObjectURL(backgroundBlob);
-                document.getElementById('main')!.style.backgroundImage = `url(${url})`;
-            })
+            setTimeout(() => {
+                response.then(async (res) => {
+                    console.log("Loaded full res")
+                    backgroundBlob = await res.blob();
+                    const url = URL.createObjectURL(backgroundBlob);
+                    document.getElementById('main')!.style.backgroundImage = `url(${url}),url(${data.background_url})`;
+                })
+                
+            }, 1000);
         })
-        setUserSettings();
-        setUserColors();
         let themesStr = localStorage.getItem("themes") || "[]";
         let parsed = JSON.parse(themesStr);
         themes.set(parsed);
@@ -62,9 +76,20 @@
             localStorage.setItem("expires_at", (new Date().getTime() + data.expires_in * 1000).toString());
         }
         window.history.pushState({}, document.title, window.location.pathname);
-    })  
+    }
+
+    onMount(setup);
 
     const setUserSettings = () =>{
+        let playing = localStorage.getItem("allowCurrentlyPlaying");
+        if(playing){
+            currentlyPlaying.set(playing === "true");
+        }else{
+            currentlyPlaying.set(false);
+            localStorage.setItem("allowCurrentlyPlaying", "false");
+        }
+
+
         setUserColors();
         let settings = localStorage.getItem("settings");
         if(!settings) settings = "{}";
@@ -106,6 +131,7 @@
         const colors = JSON.parse(colorsString);
         document.documentElement.style.setProperty('--background-color', colors.background);
         document.documentElement.style.setProperty('--background-color-opaque', colors.background.slice(0,7));
+        document.documentElement.style.setProperty('--shadow-color', colors.shadowColor);
         document.documentElement.style.setProperty('--text-color', colors.text);
         document.documentElement.style.setProperty('--text-color-accent', colors.textAccent);
         document.documentElement.style.setProperty('--text-color-hover', colors.textHover);
@@ -129,21 +155,33 @@
 
 </script>
 <main class="main displayNoneInside" id="main">
-    <Rssfeed/>
-    <div class="right-component">
-        <Multicomponent/>
-        <BottomComponent/>
-    </div>
+    {#if loggedIn}
+        
+        <Rssfeed/>
+        <div class="right-component">
+            <Multicomponent/>
+            <BottomComponent/>
+        </div>
+        <Searchbar/>
+        <SettingsModal showModal={showModal}/>
+        {#if playing}
+            <CurrentlyPlaying/>
+        {/if}
+        <div class="options-button">
+            <span class="material-symbols-outlined" on:click={() => {showModal = !showModal}} on:keydown={() => {showModal = !showModal}}>tune</span>
+        </div>
+        {:else}
+         <Login on:login={()=> {loggedIn = true}}/>
+    {/if}
+
     <Toast />
-    <CurrentlyPlaying/>
-    <Searchbar/>
-    <SettingsModal />
+
 </main>
 
 <style lang="scss">
     .main{
         height: clamp(600px, 100vh, 100vh);
-        width: clamp(1000px, 100vw, 100vw);
+        width: clamp(800px, 100vw, 100vw);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -156,8 +194,14 @@
         overflow: auto;
     }
 
+    .options-button{
+        display: none;
+    }
+
+
+
     .right-component{
-        width: clamp(300px, 40vw, 450px);
+        width: clamp(400px, 35vw, 450px);
         height: clamp(500px, 90vh, 800px);
         display: flex;
         flex-direction: column;
@@ -165,4 +209,37 @@
         gap: 20px;
     }
 
+    @media only screen and (max-width: 800px){
+        .main{
+            flex-direction: column-reverse;
+            overflow: hidden;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        .right-component{
+            margin-top: 50px;
+            width: 90%;
+            height: clamp(500px, 90vh, 800px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .options-button{
+            display: block;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--text-color);
+            padding: 5px;
+            padding-bottom: 0px;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: var(--background-color);
+        
+    }
+    }
 </style>

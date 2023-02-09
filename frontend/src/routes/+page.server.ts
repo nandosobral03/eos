@@ -1,13 +1,24 @@
-import { environment } from '$lib/environment';
+
+import { environment } from '$lib/environment.server';
 import axios from 'axios';
+import path from 'path';
+import fs from 'fs';
 
 export const load = async (data:{url:URL}) => {
+    const login = await axios.post(`${environment.api}/auth`,
+    {
+        password: "eostitanofdawnanddawnitselfasitcomesdownontohumans",
+    });
+
+    const {token} = login.data;
+    
     try{
         const results = await Promise.all([
-            getRssLinks(),
-            getBookmarks(),
-            getNotes(),
-            getTracked()
+            getRssLinks(token),
+            getBookmarks(token),
+            getNotes(token),
+            getTracked(token),
+            getBackground()
         ])
         const access_token = data.url.searchParams.get("access_token")
         const refresh_token = data.url.searchParams.get("refresh_token")
@@ -22,7 +33,8 @@ export const load = async (data:{url:URL}) => {
             tracked: results[3],
             access_token,
             refresh_token,
-            expires_in
+            expires_in,
+            background_url: results[4]
         }
     }
     catch(error){
@@ -36,23 +48,52 @@ export const load = async (data:{url:URL}) => {
     
 };
 
-const getRssLinks = async () => {
-    const response = await axios.get(`${environment.api}/rss`);
+const getRssLinks = async (token:string) => {
+    const response = await axios.get(`${environment.api}/rss`,{
+        headers: {
+            Authorization: `${token}`
+        }
+    });
     return response.data;
 }
 
 
-const getBookmarks = async () => {
-    const response = await axios.get(`${environment.api}/bookmarks`);
+const getBookmarks = async (token:string) => {
+    const response = await axios.get(`${environment.api}/bookmarks`,{
+        headers: {
+            Authorization: `${token}`
+        }
+    });
     return response.data;
 }
 
-const getNotes = async () => {
-    const response = await axios.get(`${environment.api}/notes`);
+const getNotes = async (token:string) => {
+    const response = await axios.get(`${environment.api}/notes`,{
+        headers: {
+            Authorization: `${token}`
+        }
+    });
     return response.data;
 }
 
-const getTracked = async () => {
-    const response = await axios.get(`${environment.api}/tracker`);
+const getTracked = async (token:string) => {
+    const response = await axios.get(`${environment.api}/tracker`,{
+        headers: {
+            Authorization: `${token}`
+        }
+    });
     return response.data;
+}
+
+const getBackground = async () => {
+    const imageDir = path.join(process.cwd(), "static", "images","compressed");
+    const files = fs.readdirSync(imageDir);
+    const backgroundFile = files.filter(file => file.startsWith("background."));
+    if(backgroundFile.length === 0){
+        return new Response("No background image found",{ status: 404 })
+    }
+    const imagePath = path.join(imageDir, backgroundFile[0]);
+    const image = fs.readFileSync(imagePath);
+    const imageType = backgroundFile[0].split(".")[1];
+    return `data:image/${imageType};base64,${image.toString("base64")}`;
 }

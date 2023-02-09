@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { spotifyService } from "$lib/spotify";
+	import { currentlyPlaying } from "$lib/stores/stores";
 
     let timeRange = 'short_term';
-
+    let allowPlayer = false;
+    currentlyPlaying.subscribe(x => {
+        allowPlayer = x;
+    })
 	
+    const setCurrentlyPlaying = () =>{
+        allowPlayer = !allowPlayer;
+        currentlyPlaying.set(allowPlayer);
+        localStorage.setItem('allowCurrentlyPlaying', allowPlayer.toString());
+    }
 
 
 </script>
@@ -12,7 +21,7 @@
     <div class="wrapper">
         <div class="setting">
             <div class="setting-title">
-                Spotify
+                Stats
             </div>
             <div class="setting-list">
                 <div class="setting-item">
@@ -26,18 +35,29 @@
                         
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="setting">
+            <div class="setting-title">
+                Currently Playing
+            </div>
+            <div class="setting-list">
+                <div class="setting-item">
+                    <span class="setting-item-title">Allow Player</span>
+                    <div class="setting-item-value">
+                        <div class="switch" class:on={allowPlayer} class:off={!allowPlayer} on:click={setCurrentlyPlaying} on:keydown={setCurrentlyPlaying}>
+                            <div class="ball">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 
 <style lang="scss">
-    .title{
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 10px;
-    }
+   
     .wrapper{
             border-radius: 5px;
             display: flex;
@@ -76,8 +96,11 @@
                     font-weight: 300;
                 }
                 .setting-item-value{
+                    width: 25%;
                     display: flex;
+                    height: 100%;
                     align-items: center;
+                    justify-content: flex-end;
                     gap: 5px;
                     font-size: 0.8rem;
                     font-weight: 400;
@@ -100,6 +123,40 @@
                 background-color: var(--button-color-hover);
                 color: var(--button-text-color-hover);
             }
+        }
+        .switch{
+        height: 100%;
+        aspect-ratio: 5/3;
+        background-color: var(--accent-color);
+        border-radius: 10px;
+        transition: all 200ms;
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+        cursor: pointer;
+        &.on{
+            background-color: var(--success-color);
+            .ball{
+                transform: translateX(calc(50% - 2px));
             }
+        }
+        &.off{
+            background-color: var(--danger-color);
+            .ball{
+                transform: translateX(calc(-50% + 2px));
+            }
+        }
+
+        .ball{
+            height: 100%;
+            aspect-ratio: 1/1;
+            background-color: var(--accent-color-hover);
+            border-radius: 50px;
+            transition: all 300ms;
+            position: absolute;
+            
+        }
+    }
 
 </style>

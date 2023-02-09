@@ -11,7 +11,11 @@ const createRSSStore = () => {
         loading.set(true)
         const response = await axios.get(
             `${environment.api}/rss`
-        )
+            ,{
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            })
         rss.set(response.data)
         loading.set(false)
     }
@@ -21,21 +25,33 @@ const createRSSStore = () => {
         const response = await axios.post(
             `${environment.api}/rss`,
             { url, image: "" }
-        )
+            ,{
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            })
         fetchRSSProviders();
         return response.data.id;
     }
 
     const deleteRSSProvider = async (id: number) => {
         loading.set(true)
-        await axios.delete(`${environment.api}/rss/${id}`)
+        await axios.delete(`${environment.api}/rss/${id}`,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         rss.update((rss) => rss.filter((r) => r.id !== id))
         loading.set(false)
     }
 
     const updateRSSProvider = async (provider: RSSProvider) => {
         loading.set(true)
-        await axios.put(`${environment.api}/rss/${provider.id}`, provider)
+        await axios.put(`${environment.api}/rss/${provider.id}`, provider,{
+            headers: {
+                Authorization: `${localStorage.getItem("token")}`
+            }
+        })
         await fetchRSSProviders();
     }
 
@@ -45,7 +61,8 @@ const createRSSStore = () => {
         formData.append("image", imageFile);
         await axios.put(`${environment.api}/rss/${id}/image`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "multipart/form-data",
+                "Authorization": `${localStorage.getItem("token")}`
             }
         })
         await fetchRSSProviders();
@@ -57,6 +74,11 @@ const createRSSStore = () => {
         const response = await axios.post(
             `${environment.api}/rss/mass`,
             urls
+            ,{
+                headers: {
+                    Authorization: `${localStorage.getItem("token")}`
+                }
+            }
         )
         fetchRSSProviders();
         return response.data;

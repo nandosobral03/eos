@@ -11,6 +11,14 @@
                 showSearchbar = !showSearchbar;
                 window.setTimeout(() => searchbar?.focus(), 0);
             }
+            if(e.key === "Escape"){
+                showSearchbar = false;
+            }
+            if(e.key === "`"){
+                showSearchbar = false;
+            }
+
+
             if (showSearchbar && e.key === "Enter" && !e.ctrlKey) {
                 window.open("https://www.google.com/search?q=" + searchString, "_blank");
             }
@@ -39,7 +47,8 @@
         padding: 20px 30px;
         z-index: 101;
         border: 1px solid var(--border-color);
-        box-shadow: 0 0 10px var(--border-color);
+        box-shadow: 2px 2px 5px -2px var(--shadow-color);
+        border-radius: 5px;
         input{
             width: 100%;
             height: 100%;

@@ -163,7 +163,7 @@
 		color: var(--text-color);
 		border-radius: 5px;
 		padding: 10px;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+		box-shadow: 2px 2px 5px -2px var(--shadow-color);
 		display: flex;
 		flex-direction: row;
 		justify-content:space-between;

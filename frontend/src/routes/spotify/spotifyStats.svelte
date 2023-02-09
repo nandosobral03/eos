@@ -80,11 +80,11 @@
             transition: all 0ms;
         }
     .artist {
+        box-shadow: 2px 2px 10px -2px var(--shadow-color);
         border-radius: 5px;
         width: 95%;
         font-size: 1.5rem;
         height: auto;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
         background-color: var(--accent-color);
         color: var(--text-color);
         display: flex;
@@ -135,11 +135,11 @@
     }
 
     .song{
+        box-shadow: 2px 2px 10px -2px var(--shadow-color);
         border-radius: 5px;
         width: 95%;
         font-size: 1rem;
         height: auto;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
         background-color: var(--accent-color);
         color: var(--text-color);
         display: flex;
