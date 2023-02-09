@@ -99,3 +99,20 @@ export const updateRSSImage = async (req: Request, res: Response) => {
         res.status(err.status).send(err.message);
     }
 }
+
+
+export const createMassRSS = async (req: Request, res: Response) => {
+    try{
+        if(!Array.isArray(req.body)){
+            throw {
+                status: 400,
+                message: "Invalid RSS"
+            }
+        }
+        const id = await repo.createMassRSS(req.body);
+        res.status(201).send({id, message: "RSS created"});
+    } catch (error) {
+        let err = handleHTTPError(error);
+        res.status(err.status).send(err.message);
+    }
+}

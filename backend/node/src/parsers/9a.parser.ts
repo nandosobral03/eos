@@ -22,4 +22,5 @@ export const condition = (url:string) => {
     return url.includes("9anime");
 }
 
+
 export default {parseUrl, getUrl, condition}

@@ -5,8 +5,9 @@ import noteRoutes from './routes/notes.routes';
 import fileUpload from 'express-fileupload';
 import spotifyRoutes from './routes/spotify.routes';
 import trackerRoutes from './routes/tracker.routes';
+import authRoutes from './routes/auth.routes';
 import cors from 'cors';
-
+import * as authentication from './middlewares/authentication.middleware';
 
 
 const initialize = async () => {
@@ -18,17 +19,16 @@ const initialize = async () => {
         createParentPath: true
     }));
     app.use('/static', express.static(__dirname + '/images'));
-    
-    app.use("/rss", rssRoutes);
-    app.use("/bookmarks", bookmarkRoutes);
-    app.use("/notes", noteRoutes);
+    app.use("/auth", authRoutes);
+    app.use("/rss", authentication.verifyJWT, rssRoutes);
+    app.use("/bookmarks",authentication.verifyJWT,  bookmarkRoutes);
+    app.use("/notes",authentication.verifyJWT,  noteRoutes);
     app.use("/spotify", spotifyRoutes);
-    app.use("/tracker", trackerRoutes);
-    app.listen(process.env.port, () => {
-        console.log('Example app listening on port 3000!');
+    app.use("/tracker", authentication.verifyJWT, trackerRoutes);
+    app.listen(process.env.PORT, () => {
+        console.log(`Example app listening on port ${process.env.PORT}!`);
         
     });
-
 };
 
 export default initialize;

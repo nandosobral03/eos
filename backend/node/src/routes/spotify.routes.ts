@@ -163,7 +163,8 @@ router.get("/refresh_token", async function (req, res) {
 
 router.get("/top-artists", async (req: Request, res: Response) => {
   let { term } = req.query;
-  const access_token = req.headers.authorization;
+  console.log(req.query);
+  const access_token = req.query.Authorization;
 
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
@@ -193,8 +194,8 @@ router.get("/top-artists", async (req: Request, res: Response) => {
 
 router.get("/top-tracks", async (req: Request, res: Response) => {
   let { term } = req.query;
-  const access_token = req.headers.authorization;
-
+  const access_token = req.query.Authorization;
+  console.log(req.query)
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
     return;
@@ -225,7 +226,7 @@ router.get("/top-tracks", async (req: Request, res: Response) => {
 
 
 router.get("/currently-playing", async (req: Request, res: Response) => {
-  const access_token = req.headers.authorization;
+  const access_token = req.query.Authorization;
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
     return;
@@ -261,7 +262,7 @@ router.get("/currently-playing", async (req: Request, res: Response) => {
 });
 
 router.put("/start-playback", async (req: Request, res: Response) => {
-  const access_token = req.headers.authorization  || req.query.access_token;
+  const access_token = req.query.Authorization ;
 
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
@@ -283,7 +284,7 @@ router.put("/start-playback", async (req: Request, res: Response) => {
 });
 
 router.put("/pause-playback", async (req: Request, res: Response) => {
-  const access_token = req.headers.authorization;
+  const access_token = req.query.Authorization;
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
     return;
@@ -306,7 +307,7 @@ router.put("/pause-playback", async (req: Request, res: Response) => {
 });
 
 router.put("/next-track", async (req: Request, res: Response) => {
-  const access_token = req.headers.authorization;
+  const access_token = req.query.Authorization;
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
     return;
@@ -329,7 +330,7 @@ router.put("/next-track", async (req: Request, res: Response) => {
 });
 
 router.put("/previous-track", async (req: Request, res: Response) => {
-  const access_token = req.headers.authorization;
+  const access_token = req.query.Authorization;
   if (!access_token || access_token === "") {
     res.status(403).send("No access token provided");
     return;

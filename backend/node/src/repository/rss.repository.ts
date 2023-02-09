@@ -47,7 +47,7 @@ export const updateRSSImage = async (id:number, image: { data: Buffer, name: str
     await fs.writeFileSync(filepath, image.data);
     const db = await init();
     try {
-        await db.run("UPDATE rss SET image = ? WHERE id = ?", `http://localhost:3000/static/${filename}`, id);
+        await db.run("UPDATE rss SET image = ? WHERE id = ?", `${process.env.URL}/static/${filename}`, id);
     } catch (e) {
         throw {
             status: 400,
@@ -58,10 +58,30 @@ export const updateRSSImage = async (id:number, image: { data: Buffer, name: str
 
     
 
+export const createMassRSS = async (rss:string[]) => {
+    let modelRSSs:RSS[] = rss.map((url) => {
+        return {
+            url,
+            image: `${process.env.URL}/static/default.png`
+        }
+    })
+
+    const db = await init();
+    for(let singleRSS of modelRSSs){
+        try{
+            await db.run("INSERT INTO rss (url, image) VALUES (?, ?)", singleRSS.url, singleRSS.image);
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+}
+
 export default {
     getRSS,
     createRSS,
     deleteRSS,
     updateRSS,
     updateRSSImage,
+    createMassRSS
 }
